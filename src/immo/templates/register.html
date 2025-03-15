@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+
+{% block title %}Inscription - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/register.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">Créer un compte</h1>
+                <p class="auth-subtitle">Rejoignez Step by Step Immo et commencez à gérer vos projets immobiliers</p>
+            </div>
+
+            <div class="auth-form-container">
+                <form class="auth-form" action="/register" method="post">
+                    <div class="form-group">
+                        <label for="first_name">Prénom</label>
+                        <input type="text" id="first_name" name="first_name" required placeholder="Votre prénom">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last_name">Nom</label>
+                        <input type="text" id="last_name" name="last_name" required placeholder="Votre nom">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Adresse email</label>
+                        <input type="email" id="email" name="email" required placeholder="votre.email@exemple.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <div class="password-input-container">
+                            <input type="password" id="password" name="password" required placeholder="Créez un mot de passe sécurisé">
+                            <button type="button" class="password-toggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength-meter">
+                            <div class="strength-bar"></div>
+                        </div>
+                        <p class="password-requirements">Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirmer le mot de passe</label>
+                        <div class="password-input-container">
+                            <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirmez votre mot de passe">
+                            <button type="button" class="password-toggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">J'accepte les <a href="/terms" class="text-link">conditions d'utilisation</a> et la <a href="/privacy" class="text-link">politique de confidentialité</a></label>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">Je souhaite recevoir des informations et conseils sur l'immobilier</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Créer mon compte</button>
+                </form>
+                
+                <div class="auth-separator">
+                    <span>ou</span>
+                </div>
+                
+                <div class="social-auth">
+                    <button class="btn-social btn-google">
+                        <i class="fab fa-google"></i> Continuer avec Google
+                    </button>
+                    <button class="btn-social btn-facebook">
+                        <i class="fab fa-facebook-f"></i> Continuer avec Facebook
+                    </button>
+                </div>
+                
+                <div class="auth-footer">
+                    <p>Vous avez déjà un compte ? <a href="/login" class="text-link">Connectez-vous</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion de l'affichage/masquage du mot de passe
+        const toggleButtons = document.querySelectorAll('.password-toggle');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+        
+        // Vérification de la force du mot de passe
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.querySelector('.strength-bar');
+        
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            // Mise à jour de la barre de force
+            strengthBar.style.width = (strength * 20) + '%';
+            
+            // Changement de couleur en fonction de la force
+            if (strength <= 2) {
+                strengthBar.style.backgroundColor = '#f44336'; // Rouge
+            } else if (strength <= 4) {
+                strengthBar.style.backgroundColor = '#ffc107'; // Jaune
+            } else {
+                strengthBar.style.backgroundColor = '#4caf50'; // Vert
+            }
+        });
+        
+        // Vérification de la correspondance des mots de passe
+        const confirmInput = document.getElementById('confirm_password');
+        
+        confirmInput.addEventListener('input', function() {
+            if (this.value !== passwordInput.value) {
+                this.setCustomValidity('Les mots de passe ne correspondent pas');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    });
+</script>
+{% endblock %}

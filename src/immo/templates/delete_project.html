@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Supprimer un projet - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/project-form.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="delete-confirmation-section">
+    <div class="container">
+        <div class="confirmation-container">
+            <div class="confirmation-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            
+            <h1 class="confirmation-title">Supprimer le projet</h1>
+            
+            <div class="project-summary">
+                <h2 class="project-title">{{ project.title }}</h2>
+                <p class="project-description">{{ project.description|truncate(150) }}</p>
+                
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Étapes</span>
+                        <span class="stat-value">{{ project.steps|length }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Budget</span>
+                        <span class="stat-value">{{ project.budget }} {{ project.currency.symbol }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Progression</span>
+                        <span class="stat-value">{{ project.progress }}%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-message">
+                <p><strong>Attention :</strong> Cette action est irréversible. La suppression de ce projet entraînera également la suppression de toutes les étapes associées et des données liées.</p>
+            </div>
+            
+            <form class="delete-form" action="/projets/{{ project.id }}/supprimer" method="post">
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="confirm_delete" name="confirm_delete" required>
+                    <label for="confirm_delete">Je confirme vouloir supprimer définitivement ce projet et toutes ses données</label>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="/projets/{{ project.id }}" class="btn btn-outline">Annuler</a>
+                    <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Confirmation supplémentaire avant soumission du formulaire
+        const deleteForm = document.querySelector('.delete-form');
+        
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (confirm('Êtes-vous vraiment sûr de vouloir supprimer ce projet ? Cette action est irréversible.')) {
+                this.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

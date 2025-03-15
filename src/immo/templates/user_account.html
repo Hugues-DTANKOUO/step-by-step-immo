@@ -1,0 +1,627 @@
+{% extends "layout.html" %}
+
+{% block title %}Mon compte - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/user-account.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="account-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Mon compte</h1>
+            <p class="page-subtitle">Gérez vos informations personnelles et vos préférences</p>
+        </div>
+
+        <div class="account-container">
+            <div class="account-sidebar">
+                <div class="user-profile">
+                    <div class="profile-avatar">
+                        {% if user.avatar_url %}
+                        <img src="{{ user.avatar_url }}" alt="Photo de profil" class="avatar-image">
+                        {% else %}
+                        <div class="avatar-placeholder">
+                            <span>{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                        </div>
+                        {% endif %}
+                        <button class="avatar-edit-button" id="avatar-upload-btn">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <input type="file" id="avatar-upload" class="hidden-input" accept="image/*">
+                    </div>
+                    <h2 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h2>
+                    <p class="profile-email">{{ user.email }}</p>
+                    <p class="profile-member-since">Membre depuis {{ user.created_at|date('%d/%m/%Y') }}</p>
+                </div>
+
+                <nav class="account-nav">
+                    <ul class="nav-list">
+                        <li class="nav-item active" data-target="personal-info">
+                            <i class="fas fa-user"></i>
+                            <span>Informations personnelles</span>
+                        </li>
+                        <li class="nav-item" data-target="security">
+                            <i class="fas fa-lock"></i>
+                            <span>Sécurité</span>
+                        </li>
+                        <li class="nav-item" data-target="subscription">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Abonnement</span>
+                        </li>
+                        <li class="nav-item" data-target="notifications">
+                            <i class="fas fa-bell"></i>
+                            <span>Notifications</span>
+                        </li>
+                        <li class="nav-item" data-target="privacy">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Confidentialité</span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="account-content">
+                <!-- Informations personnelles -->
+                <div class="account-panel active" id="personal-info">
+                    <h2 class="panel-title">Informations personnelles</h2>
+                    
+                    <form class="account-form" action="/compte/informations" method="post">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first_name">Prénom</label>
+                                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="last_name">Nom</label>
+                                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Adresse email</label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="tel" id="phone" name="phone" value="{{ user.phone }}">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="country">Pays</label>
+                                <select id="country" name="country_id">
+                                    <option value="">Sélectionnez un pays</option>
+                                    {% for country in countries %}
+                                    <option value="{{ country.id }}" {% if user.country_id == country.id %}selected{% endif %}>{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="city">Ville</label>
+                                <select id="city" name="city_id">
+                                    <option value="">Sélectionnez une ville</option>
+                                    {% for city in cities %}
+                                    <option value="{{ city.id }}" {% if user.city_id == city.id %}selected{% endif %}>{{ city.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bio">Biographie</label>
+                            <textarea id="bio" name="bio" rows="4">{{ user.bio }}</textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Sécurité -->
+                <div class="account-panel" id="security">
+                    <h2 class="panel-title">Sécurité</h2>
+                    
+                    <form class="account-form" action="/compte/securite/mot-de-passe" method="post">
+                        <h3 class="section-subtitle">Changer de mot de passe</h3>
+                        
+                        <div class="form-group">
+                            <label for="current_password">Mot de passe actuel</label>
+                            <div class="password-input-container">
+                                <input type="password" id="current_password" name="current_password" required>
+                                <button type="button" class="password-toggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new_password">Nouveau mot de passe</label>
+                            <div class="password-input-container">
+                                <input type="password" id="new_password" name="new_password" required>
+                                <button type="button" class="password-toggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength-meter">
+                                <div class="strength-bar"></div>
+                            </div>
+                            <p class="password-requirements">Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirm_password">Confirmer le nouveau mot de passe</label>
+                            <div class="password-input-container">
+                                <input type="password" id="confirm_password" name="confirm_password" required>
+                                <button type="button" class="password-toggle">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                        </div>
+                    </form>
+                    
+                    <div class="security-section">
+                        <h3 class="section-subtitle">Authentification à deux facteurs</h3>
+                        
+                        <div class="two-factor-status">
+                            <div class="status-indicator {% if user.two_factor_enabled %}enabled{% else %}disabled{% endif %}">
+                                <i class="fas fa-{% if user.two_factor_enabled %}check{% else %}times{% endif %}"></i>
+                                <span>{{ 'Activée' if user.two_factor_enabled else 'Désactivée' }}</span>
+                            </div>
+                            
+                            <a href="/compte/securite/2fa" class="btn btn-outline btn-sm">
+                                {{ 'Désactiver' if user.two_factor_enabled else 'Activer' }}
+                            </a>
+                        </div>
+                        
+                        <p class="security-info">L'authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte en demandant un code temporaire en plus de votre mot de passe lors de la connexion.</p>
+                    </div>
+                    
+                    <div class="security-section">
+                        <h3 class="section-subtitle">Sessions actives</h3>
+                        
+                        <div class="sessions-list">
+                            {% for session in user.active_sessions %}
+                            <div class="session-item">
+                                <div class="session-info">
+                                    <div class="session-device">
+                                        <i class="fas fa-{% if session.device_type == 'mobile' %}mobile-alt{% elif session.device_type == 'tablet' %}tablet-alt{% else %}desktop{% endif %}"></i>
+                                        <span>{{ session.device_name }}</span>
+                                    </div>
+                                    <div class="session-details">
+                                        <span class="session-location">{{ session.location }}</span>
+                                        <span class="session-time">Dernière activité: {{ session.last_activity|date('%d/%m/%Y %H:%M') }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="session-actions">
+                                    {% if session.is_current %}
+                                    <span class="current-session-badge">Session actuelle</span>
+                                    {% else %}
+                                    <button class="btn btn-danger btn-sm" data-session-id="{{ session.id }}">Déconnecter</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button id="logout-all-sessions" class="btn btn-outline">Déconnecter toutes les autres sessions</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Abonnement -->
+                <div class="account-panel" id="subscription">
+                    <h2 class="panel-title">Abonnement</h2>
+                    
+                    <div class="subscription-status">
+                        <div class="status-card">
+                            <div class="status-header">
+                                <h3 class="status-title">{{ user.subscription.plan_name }}</h3>
+                                <span class="status-badge {{ user.subscription.status }}">{{ user.subscription.status_label }}</span>
+                            </div>
+                            
+                            <div class="status-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Prix</span>
+                                    <span class="detail-value">{{ user.subscription.price }} {{ user.subscription.currency }}/{{ user.subscription.interval }}</span>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <span class="detail-label">Prochaine facturation</span>
+                                    <span class="detail-value">{{ user.subscription.next_billing_date|date('%d/%m/%Y') }}</span>
+                                </div>
+                                
+                                <div class="detail-item">
+                                    <span class="detail-label">Méthode de paiement</span>
+                                    <span class="detail-value">{{ user.subscription.payment_method }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="status-actions">
+                                <a href="/abonnement/modifier" class="btn btn-outline">Changer de formule</a>
+                                <a href="/abonnement/annuler" class="btn btn-danger">Annuler l'abonnement</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="billing-history">
+                        <h3 class="section-subtitle">Historique de facturation</h3>
+                        
+                        <div class="billing-list">
+                            {% for invoice in user.invoices %}
+                            <div class="invoice-item">
+                                <div class="invoice-info">
+                                    <span class="invoice-date">{{ invoice.date|date('%d/%m/%Y') }}</span>
+                                    <span class="invoice-amount">{{ invoice.amount }} {{ invoice.currency }}</span>
+                                </div>
+                                
+                                <div class="invoice-actions">
+                                    <a href="{{ invoice.pdf_url }}" class="btn btn-sm btn-outline" target="_blank">
+                                        <i class="fas fa-download"></i> Télécharger
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notifications -->
+                <div class="account-panel" id="notifications">
+                    <h2 class="panel-title">Notifications</h2>
+                    
+                    <form class="account-form" action="/compte/notifications" method="post">
+                        <div class="notification-settings">
+                            <div class="notification-group">
+                                <h3 class="group-title">Notifications par email</h3>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Mises à jour de projets</h4>
+                                        <p class="option-description">Recevez des notifications lorsque vos projets sont mis à jour ou atteignent des jalons importants.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="email_project_updates" {% if user.notification_settings.email_project_updates %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Rappels d'échéances</h4>
+                                        <p class="option-description">Recevez des rappels pour les échéances à venir dans vos projets.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="email_deadline_reminders" {% if user.notification_settings.email_deadline_reminders %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Conseils et astuces</h4>
+                                        <p class="option-description">Recevez des conseils et astuces pour optimiser vos projets immobiliers.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="email_tips" {% if user.notification_settings.email_tips %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Nouvelles fonctionnalités</h4>
+                                        <p class="option-description">Soyez informé des nouvelles fonctionnalités et améliorations de la plateforme.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="email_new_features" {% if user.notification_settings.email_new_features %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-group">
+                                <h3 class="group-title">Notifications dans l'application</h3>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Mises à jour de projets</h4>
+                                        <p class="option-description">Recevez des notifications dans l'application pour les mises à jour de vos projets.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="app_project_updates" {% if user.notification_settings.app_project_updates %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Rappels d'échéances</h4>
+                                        <p class="option-description">Recevez des rappels dans l'application pour les échéances à venir.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="app_deadline_reminders" {% if user.notification_settings.app_deadline_reminders %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="notification-option">
+                                    <div class="option-info">
+                                        <h4 class="option-title">Nouvelles fonctionnalités</h4>
+                                        <p class="option-description">Soyez informé des nouvelles fonctionnalités directement dans l'application.</p>
+                                    </div>
+                                    
+                                    <div class="option-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="app_new_features" {% if user.notification_settings.app_new_features %}checked{% endif %}>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer les préférences</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Confidentialité -->
+                <div class="account-panel" id="privacy">
+                    <h2 class="panel-title">Confidentialité</h2>
+                    
+                    <form class="account-form" action="/compte/confidentialite" method="post">
+                        <div class="privacy-settings">
+                            <div class="privacy-option">
+                                <div class="option-info">
+                                    <h4 class="option-title">Visibilité du profil</h4>
+                                    <p class="option-description">Choisissez qui peut voir votre profil sur la plateforme.</p>
+                                </div>
+                                
+                                <div class="option-control">
+                                    <select name="profile_visibility">
+                                        <option value="public" {% if user.privacy_settings.profile_visibility == 'public' %}selected{% endif %}>Public</option>
+                                        <option value="registered" {% if user.privacy_settings.profile_visibility == 'registered' %}selected{% endif %}>Utilisateurs inscrits uniquement</option>
+                                        <option value="private" {% if user.privacy_settings.profile_visibility == 'private' %}selected{% endif %}>Privé</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="privacy-option">
+                                <div class="option-info">
+                                    <h4 class="option-title">Partage de données</h4>
+                                    <p class="option-description">Autorisez le partage de vos données anonymisées pour améliorer nos services.</p>
+                                </div>
+                                
+                                <div class="option-toggle">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" name="data_sharing" {% if user.privacy_settings.data_sharing %}checked{% endif %}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="privacy-option">
+                                <div class="option-info">
+                                    <h4 class="option-title">Cookies de suivi</h4>
+                                    <p class="option-description">Autorisez l'utilisation de cookies pour personnaliser votre expérience.</p>
+                                </div>
+                                
+                                <div class="option-toggle">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" name="tracking_cookies" {% if user.privacy_settings.tracking_cookies %}checked{% endif %}>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer les préférences</button>
+                        </div>
+                    </form>
+                    
+                    <div class="data-export-section">
+                        <h3 class="section-subtitle">Exportation et suppression de données</h3>
+                        
+                        <div class="data-actions">
+                            <div class="action-info">
+                                <h4 class="action-title">Exporter mes données</h4>
+                                <p class="action-description">Téléchargez une copie de toutes vos données personnelles et de vos projets.</p>
+                            </div>
+                            
+                            <a href="/compte/exporter-donnees" class="btn btn-outline">Exporter mes données</a>
+                        </div>
+                        
+                        <div class="data-actions danger-zone">
+                            <div class="action-info">
+                                <h4 class="action-title">Supprimer mon compte</h4>
+                                <p class="action-description">Supprimez définitivement votre compte et toutes vos données. Cette action est irréversible.</p>
+                            </div>
+                            
+                            <a href="/compte/supprimer" class="btn btn-danger">Supprimer mon compte</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Navigation entre les panneaux
+        const navItems = document.querySelectorAll('.nav-item');
+        const panels = document.querySelectorAll('.account-panel');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                
+                // Mettre à jour la navigation
+                navItems.forEach(navItem => navItem.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Afficher le panneau correspondant
+                panels.forEach(panel => {
+                    if (panel.id === targetId) {
+                        panel.classList.add('active');
+                    } else {
+                        panel.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // Gestion de l'upload d'avatar
+        const avatarUploadBtn = document.getElementById('avatar-upload-btn');
+        const avatarUploadInput = document.getElementById('avatar-upload');
+        
+        avatarUploadBtn.addEventListener('click', function() {
+            avatarUploadInput.click();
+        });
+        
+        avatarUploadInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                // Simuler l'upload (dans une implémentation réelle, cela serait géré par un formulaire)
+                const formData = new FormData();
+                formData.append('avatar', this.files[0]);
+                
+                // Afficher un aperçu
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarImage = document.querySelector('.avatar-image') || document.createElement('img');
+                    avatarImage.src = e.target.result;
+                    avatarImage.classList.add('avatar-image');
+                    
+                    const placeholder = document.querySelector('.avatar-placeholder');
+                    if (placeholder) {
+                        placeholder.parentNode.replaceChild(avatarImage, placeholder);
+                    }
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        // Gestion de l'affichage/masquage du mot de passe
+        const toggleButtons = document.querySelectorAll('.password-toggle');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+        
+        // Vérification de la force du mot de passe
+        const passwordInput = document.getElementById('new_password');
+        const strengthBar = document.querySelector('.strength-bar');
+        
+        if (passwordInput && strengthBar) {
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                if (password.length >= 8) strength += 1;
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[a-z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                // Mise à jour de la barre de force
+                strengthBar.style.width = (strength * 20) + '%';
+                
+                // Changement de couleur en fonction de la force
+                if (strength <= 2) {
+                    strengthBar.style.backgroundColor = '#f44336'; // Rouge
+                } else if (strength <= 4) {
+                    strengthBar.style.backgroundColor = '#ffc107'; // Jaune
+                } else {
+                    strengthBar.style.backgroundColor = '#4caf50'; // Vert
+                }
+            });
+        }
+        
+        // Vérification de la correspondance des mots de passe
+        const confirmInput = document.getElementById('confirm_password');
+        
+        if (passwordInput && confirmInput) {
+            confirmInput.addEventListener('input', function() {
+                if (this.value !== passwordInput.value) {
+                    this.setCustomValidity('Les mots de passe ne correspondent pas');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+        
+        // Gestion des sessions
+        const sessionButtons = document.querySelectorAll('[data-session-id]');
+        
+        sessionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const sessionId = this.getAttribute('data-session-id');
+                
+                if (confirm('Êtes-vous sûr de vouloir déconnecter cette session ?')) {
+                    // Simuler la déconnexion (dans une implémentation réelle, cela serait géré par une requête AJAX)
+                    this.closest('.session-item').style.display = 'none';
+                }
+            });
+        });
+        
+        const logoutAllButton = document.getElementById('logout-all-sessions');
+        
+        if (logoutAllButton) {
+            logoutAllButton.addEventListener('click', function() {
+                if (confirm('Êtes-vous sûr de vouloir déconnecter toutes les autres sessions ?')) {
+                    // Simuler la déconnexion de toutes les sessions (dans une implémentation réelle, cela serait géré par une requête AJAX)
+                    const sessionItems = document.querySelectorAll('.session-item:not(:has(.current-session-badge))');
+                    sessionItems.forEach(item => {
+                        item.style.display = 'none';
+                    });
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

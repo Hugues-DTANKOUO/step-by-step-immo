@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+
+{% block title %}Ajouter une étape - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/project-form.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="step-form-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Ajouter une étape au projet</h1>
+            <p class="page-subtitle">{{ project.title }}</p>
+        </div>
+
+        <div class="form-container">
+            <form class="step-form" action="/projets/{{ project.id }}/etapes/ajouter" method="post">
+                <div class="form-section">
+                    <h2 class="section-title">Informations de l'étape</h2>
+                    
+                    <div class="form-group">
+                        <label for="title">Titre de l'étape <span class="required">*</span></label>
+                        <input type="text" id="title" name="title" required 
+                               placeholder="Ex: Recherche de financement" 
+                               minlength="3" maxlength="64">
+                        <p class="field-hint">Donnez un titre clair et concis à cette étape (3-64 caractères)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description <span class="required">*</span></label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Décrivez cette étape en détail..." 
+                                  minlength="3" maxlength="1000" rows="5"></textarea>
+                        <p class="field-hint">Décrivez les objectifs, tâches et résultats attendus pour cette étape (3-1000 caractères)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="number">Numéro d'ordre <span class="required">*</span></label>
+                        <input type="number" id="number" name="number" required min="1" value="{{ next_step_number }}">
+                        <p class="field-hint">Position de cette étape dans la séquence du projet</p>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Budget et calendrier</h2>
+                    
+                    <div class="form-group">
+                        <label for="budget">Budget alloué <span class="required">*</span></label>
+                        <div class="input-with-addon">
+                            <input type="number" id="budget" name="budget" required min="0" step="100">
+                            <span class="addon">{{ project.currency.symbol }}</span>
+                        </div>
+                        <p class="field-hint">Budget restant disponible: {{ remaining_budget }} {{ project.currency.symbol }}</p>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="begin_at">Date de début</label>
+                            <input type="date" id="begin_at" name="begin_at">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end_at">Date de fin estimée</label>
+                            <input type="date" id="end_at" name="end_at">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Ressources et documents</h2>
+                    
+                    <div class="form-group">
+                        <label for="resources">Ressources nécessaires</label>
+                        <textarea id="resources" name="resources" 
+                                  placeholder="Listez les ressources nécessaires pour cette étape..." 
+                                  rows="3"></textarea>
+                        <p class="field-hint">Personnes, matériaux, outils ou autres ressources nécessaires</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="documents">Documents associés</label>
+                        <div class="file-upload-container">
+                            <input type="file" id="documents" name="documents" multiple>
+                            <label for="documents" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Glissez des fichiers ici ou cliquez pour parcourir</span>
+                            </label>
+                            <div class="file-list"></div>
+                        </div>
+                        <p class="field-hint">Vous pourrez également ajouter des documents plus tard</p>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="/projets/{{ project.id }}" class="btn btn-outline">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Ajouter l'étape</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validation des dates (fin après début)
+        const beginDateInput = document.getElementById('begin_at');
+        const endDateInput = document.getElementById('end_at');
+        
+        endDateInput.addEventListener('change', function() {
+            if (beginDateInput.value && this.value) {
+                const beginDate = new Date(beginDateInput.value);
+                const endDate = new Date(this.value);
+                
+                if (endDate < beginDate) {
+                    this.setCustomValidity('La date de fin doit être postérieure à la date de début');
+                } else {
+                    this.setCustomValidity('');
+                }
+            }
+        });
+        
+        beginDateInput.addEventListener('change', function() {
+            if (endDateInput.value) {
+                endDateInput.dispatchEvent(new Event('change'));
+            }
+        });
+        
+        // Gestion de l'upload de fichiers
+        const fileInput = document.getElementById('documents');
+        const fileList = document.querySelector('.file-list');
+        
+        fileInput.addEventListener('change', function() {
+            fileList.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-size">${formatFileSize(file.size)}</span>
+                    `;
+                    fileList.appendChild(fileItem);
+                }
+            }
+        });
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Validation du budget
+        const budgetInput = document.getElementById('budget');
+        const remainingBudget = remaining_budget;
+        
+        budgetInput.addEventListener('input', function() {
+            const value = parseInt(this.value);
+            
+            if (value > remainingBudget) {
+                this.setCustomValidity(`Le budget alloué dépasse le budget restant disponible (${remainingBudget} {{ project.currency.symbol }})`);
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -58,9 +58,16 @@ namespace_packages = true
 mypy_path = "src"
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
-addopts = "--cov=immo --cov-report=term-missing --cov-config=.coveragerc --cov-context=test"
+addopts = [
+    "--cov=immo",
+    "--cov-report=term-missing",
+    "--cov-config=.coveragerc",
+    "--cov-context=test"
+]
 testpaths = ["tests"]
+
+[tool.pytest-asyncio]
+asyncio_mode = "auto"
 
 [tool.coverage.run]
 source = ["immo"]

@@ -813,3 +813,9 @@
     animation: slideInUp var(--transition-normal);
   }
   
+  .progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    border-radius: 4px;
+  }
+  

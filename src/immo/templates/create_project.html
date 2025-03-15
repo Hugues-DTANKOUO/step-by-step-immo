@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block title %}Créer un projet - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/project-form.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="project-form-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Créer un nouveau projet</h1>
+            <p class="page-subtitle">Définissez les détails de votre projet immobilier et commencez à le structurer étape par étape</p>
+        </div>
+
+        <div class="form-container">
+            <form class="project-form" action="/projets/nouveau" method="post">
+                <div class="form-section">
+                    <h2 class="section-title">Informations générales</h2>
+                    
+                    <div class="form-group">
+                        <label for="title">Titre du projet <span class="required">*</span></label>
+                        <input type="text" id="title" name="title" required 
+                               placeholder="Ex: Achat appartement Paris 15ème" 
+                               minlength="3" maxlength="64">
+                        <p class="field-hint">Donnez un titre clair et concis à votre projet (3-64 caractères)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description <span class="required">*</span></label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Décrivez votre projet en détail..." 
+                                  minlength="3" maxlength="1000" rows="5"></textarea>
+                        <p class="field-hint">Décrivez votre projet, ses objectifs et toute information pertinente (3-1000 caractères)</p>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Localisation et budget</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Ville</label>
+                            <select id="city" name="city_id">
+                                <option value="">Sélectionnez une ville</option>
+                                {% for city in cities %}
+                                <option value="{{ city.id }}">{{ city.name }}, {{ city.country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="budget">Budget estimé <span class="required">*</span></label>
+                            <div class="input-with-addon">
+                                <input type="number" id="budget" name="budget" required min="0" step="1000">
+                                <select id="currency" name="currency_id" class="addon">
+                                    {% for currency in currencies %}
+                                    <option value="{{ currency.id }}" {% if currency.code == 'EUR' %}selected{% endif %}>{{ currency.symbol }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Calendrier prévisionnel</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="begin_at">Date de début</label>
+                            <input type="date" id="begin_at" name="begin_at">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end_at">Date de fin estimée</label>
+                            <input type="date" id="end_at" name="end_at">
+                        </div>
+                    </div>
+                    
+                    <p class="field-hint">Les dates sont optionnelles et peuvent être modifiées ultérieurement</p>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="/dashboard" class="btn btn-outline">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Créer le projet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validation des dates (fin après début)
+        const beginDateInput = document.getElementById('begin_at');
+        const endDateInput = document.getElementById('end_at');
+        
+        endDateInput.addEventListener('change', function() {
+            if (beginDateInput.value && this.value) {
+                const beginDate = new Date(beginDateInput.value);
+                const endDate = new Date(this.value);
+                
+                if (endDate < beginDate) {
+                    this.setCustomValidity('La date de fin doit être postérieure à la date de début');
+                } else {
+                    this.setCustomValidity('');
+                }
+            }
+        });
+        
+        beginDateInput.addEventListener('change', function() {
+            if (endDateInput.value) {
+                endDateInput.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+</script>
+{% endblock %}

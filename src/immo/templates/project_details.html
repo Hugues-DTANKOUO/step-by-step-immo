@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ project.title }} - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/project-details.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="project-details-section">
+    <div class="container">
+        <div class="project-header">
+            <div class="project-header-content">
+                <div class="project-title-container">
+                    <h1 class="project-title">{{ project.title }}</h1>
+                    <span class="project-status {{ project.status|lower }}">{{ project.status }}</span>
+                </div>
+                <p class="project-description">{{ project.description }}</p>
+                
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ project.city.name }}, {{ project.city.country.name }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Créé le {{ project.created_at|date('%d/%m/%Y') }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Budget: {{ project.budget }} {{ project.currency.symbol }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-actions">
+                <a href="/projets/{{ project.id }}/modifier" class="btn btn-outline">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <a href="/projets/{{ project.id }}/supprimer" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Supprimer
+                </a>
+            </div>
+        </div>
+        
+        <div class="project-progress-container">
+            <div class="progress-header">
+                <h2>Progression globale</h2>
+                <span class="progress-percentage">{{ project.progress }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            
+            <div class="project-timeline">
+                {% if project.begin_at %}
+                <div class="timeline-start">
+                    <i class="fas fa-flag-checkered"></i>
+                    <span>{{ project.begin_at|date('%d/%m/%Y') }}</span>
+                </div>
+                {% endif %}
+                
+                {% if project.end_at %}
+                <div class="timeline-end">
+                    <i class="fas fa-trophy"></i>
+                    <span>{{ project.end_at|date('%d/%m/%Y') }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="project-steps-container">
+            <div class="steps-header">
+                <h2>Étapes du projet</h2>
+                <a href="/projets/{{ project.id }}/etapes/ajouter" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Ajouter une étape
+                </a>
+            </div>
+            
+            {% if project.steps %}
+            <div class="steps-list">
+                {% for step in project.steps|sort(attribute='number') %}
+                <div class="step-card">
+                    <div class="step-number">{{ step.number }}</div>
+                    
+                    <div class="step-content">
+                        <div class="step-header">
+                            <h3 class="step-title">{{ step.title }}</h3>
+                            <div class="step-progress">
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                                <span class="progress-text">{{ step.progress }}%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="step-description">
+                            <p>{{ step.description }}</p>
+                        </div>
+                        
+                        <div class="step-details">
+                            <div class="detail-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Budget: {{ step.budget }} {{ project.currency.symbol }}</span>
+                            </div>
+                            
+                            {% if step.begin_at or step.end_at %}
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>
+                                    {% if step.begin_at %}Du {{ step.begin_at|date('%d/%m/%Y') }}{% endif %}
+                                    {% if step.end_at %}au {{ step.end_at|date('%d/%m/%Y') }}{% endif %}
+                                </span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if step.documents %}
+                            <div class="detail-item">
+                                <i class="fas fa-file-alt"></i>
+                                <span>{{ step.documents|length }} document(s)</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if step.documents %}
+                        <div class="step-documents">
+                            <h4>Documents</h4>
+                            <ul class="documents-list">
+                                {% for document in step.documents %}
+                                <li class="document-item">
+                                    <a href="{{ document.url }}" target="_blank" class="document-link">
+                                        <i class="fas fa-file"></i>
+                                        <span>{{ document.name }}</span>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="step-actions">
+                            <a href="/projets/{{ project.id }}/etapes/{{ step.id }}/modifier" class="btn btn-outline btn-sm">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <a href="/projets/{{ project.id }}/etapes/{{ step.id }}/supprimer" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3 class="empty-title">Aucune étape pour le moment</h3>
+                <p class="empty-text">Commencez par ajouter des étapes à votre projet pour le structurer et suivre sa progression</p>
+                <a href="/projets/{{ project.id }}/etapes/ajouter" class="btn btn-primary">Ajouter une étape</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des cartes d'étapes au défilement
+        const stepCards = document.querySelectorAll('.step-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        stepCards.forEach(card => {
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

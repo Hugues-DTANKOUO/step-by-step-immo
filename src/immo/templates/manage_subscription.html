@@ -1,0 +1,477 @@
+{% extends "layout.html" %}
+
+{% block title %}Gérer mon abonnement - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/subscription.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="subscription-management-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Gérer mon abonnement</h1>
+            <p class="page-subtitle">Consultez et modifiez les détails de votre abonnement</p>
+        </div>
+
+        <div class="subscription-details">
+            <div class="subscription-card">
+                <div class="subscription-header">
+                    <h2 class="subscription-plan">{{ subscription.plan_name }}</h2>
+                    <span class="subscription-status {{ subscription.status }}">{{ subscription.status_label }}</span>
+                </div>
+                
+                <div class="subscription-info">
+                    <div class="info-item">
+                        <span class="info-label">Prix</span>
+                        <span class="info-value">{{ subscription.price }} {{ subscription.currency }}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Cycle de facturation</span>
+                        <span class="info-value">{{ subscription.billing_cycle }}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Prochaine facturation</span>
+                        <span class="info-value">{{ subscription.next_billing_date|date('%d/%m/%Y') }}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Date de début</span>
+                        <span class="info-value">{{ subscription.start_date|date('%d/%m/%Y') }}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Renouvellement automatique</span>
+                        <span class="info-value">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="auto-renew-toggle" {% if subscription.auto_renew %}checked{% endif %}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="subscription-actions">
+                    <a href="/abonnement/modifier" class="btn btn-primary">Changer de formule</a>
+                    <a href="/abonnement/annuler" class="btn btn-danger">Annuler l'abonnement</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="payment-methods">
+            <h2 class="section-title">Méthodes de paiement</h2>
+            
+            <div class="payment-list">
+                {% for method in payment_methods %}
+                <div class="payment-card">
+                    <div class="payment-info">
+                        <div class="payment-icon">
+                            <i class="fas fa-{% if method.type == 'credit_card' %}credit-card{% elif method.type == 'paypal' %}paypal{% else %}university{% endif %}"></i>
+                        </div>
+                        
+                        <div class="payment-details">
+                            <h3 class="payment-title">
+                                {% if method.type == 'credit_card' %}
+                                Carte {{ method.brand }} se terminant par {{ method.last4 }}
+                                {% elif method.type == 'paypal' %}
+                                PayPal ({{ method.email }})
+                                {% else %}
+                                Virement bancaire
+                                {% endif %}
+                            </h3>
+                            
+                            {% if method.type == 'credit_card' %}
+                            <p class="payment-expiry">Expire le {{ method.exp_month }}/{{ method.exp_year }}</p>
+                            {% endif %}
+                            
+                            {% if method.is_default %}
+                            <span class="default-badge">Méthode par défaut</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="payment-actions">
+                        {% if not method.is_default %}
+                        <button class="btn btn-sm btn-outline set-default-btn" data-method-id="{{ method.id }}">Définir par défaut</button>
+                        {% endif %}
+                        <button class="btn btn-sm btn-danger delete-method-btn" data-method-id="{{ method.id }}">Supprimer</button>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="add-payment-card">
+                    <button id="add-payment-btn" class="add-payment-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Ajouter une méthode de paiement</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="billing-history">
+            <h2 class="section-title">Historique de facturation</h2>
+            
+            <div class="billing-table-container">
+                <table class="billing-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for invoice in invoices %}
+                        <tr>
+                            <td>{{ invoice.date|date('%d/%m/%Y') }}</td>
+                            <td>{{ invoice.description }}</td>
+                            <td>{{ invoice.amount }} {{ invoice.currency }}</td>
+                            <td><span class="invoice-status {{ invoice.status }}">{{ invoice.status_label }}</span></td>
+                            <td>
+                                <a href="{{ invoice.pdf_url }}" class="btn btn-sm btn-outline" target="_blank">
+                                    <i class="fas fa-download"></i> Télécharger
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if invoices|length > 10 %}
+            <div class="pagination">
+                <button class="pagination-btn prev">
+                    <i class="fas fa-chevron-left"></i> Précédent
+                </button>
+                <div class="pagination-info">Page 1 sur 2</div>
+                <button class="pagination-btn next">
+                    Suivant <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Modal d'ajout de méthode de paiement -->
+<div class="modal" id="payment-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Ajouter une méthode de paiement</h2>
+            <button class="modal-close">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="payment-tabs">
+                <button class="tab-btn active" data-tab="credit-card">Carte de crédit</button>
+                <button class="tab-btn" data-tab="paypal">PayPal</button>
+                <button class="tab-btn" data-tab="bank-transfer">Virement bancaire</button>
+            </div>
+            
+            <div class="tab-content active" id="credit-card">
+                <form class="payment-form" id="credit-card-form">
+                    <div class="form-group">
+                        <label for="card-number">Numéro de carte</label>
+                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="card-expiry">Date d'expiration</label>
+                            <input type="text" id="card-expiry" placeholder="MM/AA" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-cvc">CVC</label>
+                            <input type="text" id="card-cvc" placeholder="123" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="card-name">Nom sur la carte</label>
+                        <input type="text" id="card-name" placeholder="John Doe" required>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="save-card" checked>
+                        <label for="save-card">Définir comme méthode de paiement par défaut</label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Ajouter la carte</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="paypal">
+                <div class="paypal-info">
+                    <p>Vous allez être redirigé vers PayPal pour compléter la configuration.</p>
+                    <p>Une fois terminé, vous reviendrez automatiquement sur cette page.</p>
+                </div>
+                
+                <div class="form-actions">
+                    <button id="paypal-btn" class="btn btn-primary">Continuer vers PayPal</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="bank-transfer">
+                <div class="bank-info">
+                    <p>Pour configurer un paiement par virement bancaire, veuillez utiliser les coordonnées suivantes :</p>
+                    
+                    <div class="bank-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Bénéficiaire :</span>
+                            <span class="detail-value">Step by Step Immo SAS</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">IBAN :</span>
+                            <span class="detail-value">FR76 3000 4000 0400 0012 3456 789</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">BIC :</span>
+                            <span class="detail-value">BNPAFRPPXXX</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Banque :</span>
+                            <span class="detail-value">Banque Nationale de Paris</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Référence :</span>
+                            <span class="detail-value">SBSI-{{ user.id }}-{{ subscription.id }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="bank-note">Veuillez inclure la référence dans le libellé de votre virement pour que nous puissions identifier votre paiement.</p>
+                </div>
+                
+                <div class="form-actions">
+                    <button id="bank-confirm-btn" class="btn btn-primary">J'ai effectué le virement</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion du toggle de renouvellement automatique
+        const autoRenewToggle = document.getElementById('auto-renew-toggle');
+        
+        if (autoRenewToggle) {
+            autoRenewToggle.addEventListener('change', function() {
+                // Dans une implémentation réelle, cela serait géré par une requête AJAX
+                const status = this.checked ? 'activé' : 'désactivé';
+                alert(`Le renouvellement automatique a été ${status}.`);
+            });
+        }
+        
+        // Gestion des boutons de méthode de paiement par défaut
+        const setDefaultBtns = document.querySelectorAll('.set-default-btn');
+        
+        setDefaultBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const methodId = this.getAttribute('data-method-id');
+                
+                // Dans une implémentation réelle, cela serait géré par une requête AJAX
+                alert(`La méthode de paiement a été définie comme méthode par défaut.`);
+                
+                // Simuler la mise à jour de l'interface
+                document.querySelectorAll('.default-badge').forEach(badge => {
+                    badge.remove();
+                });
+                
+                const paymentCard = this.closest('.payment-card');
+                const paymentDetails = paymentCard.querySelector('.payment-details');
+                
+                const defaultBadge = document.createElement('span');
+                defaultBadge.className = 'default-badge';
+                defaultBadge.textContent = 'Méthode par défaut';
+                paymentDetails.appendChild(defaultBadge);
+                
+                // Masquer tous les boutons "Définir par défaut"
+                setDefaultBtns.forEach(btn => {
+                    btn.style.display = 'none';
+                });
+            });
+        });
+        
+        // Gestion des boutons de suppression de méthode de paiement
+        const deleteMethodBtns = document.querySelectorAll('.delete-method-btn');
+        
+        deleteMethodBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const methodId = this.getAttribute('data-method-id');
+                
+                if (confirm('Êtes-vous sûr de vouloir supprimer cette méthode de paiement ?')) {
+                    // Dans une implémentation réelle, cela serait géré par une requête AJAX
+                    alert(`La méthode de paiement a été supprimée.`);
+                    
+                    // Simuler la suppression de la carte
+                    this.closest('.payment-card').remove();
+                }
+            });
+        });
+        
+        // Gestion du modal d'ajout de méthode de paiement
+        const addPaymentBtn = document.getElementById('add-payment-btn');
+        const paymentModal = document.getElementById('payment-modal');
+        const modalClose = document.querySelector('.modal-close');
+        
+        if (addPaymentBtn && paymentModal) {
+            addPaymentBtn.addEventListener('click', function() {
+                paymentModal.style.display = 'flex';
+            });
+            
+            modalClose.addEventListener('click', function() {
+                paymentModal.style.display = 'none';
+            });
+            
+            // Fermer le modal en cliquant en dehors
+            window.addEventListener('click', function(event) {
+                if (event.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Gestion des onglets du modal
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Mettre à jour les boutons d'onglet
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Afficher le contenu de l'onglet correspondant
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tabId) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Gestion du formulaire de carte de crédit
+        const creditCardForm = document.getElementById('credit-card-form');
+        
+        if (creditCardForm) {
+            creditCardForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Dans une implémentation réelle, cela serait géré par une requête AJAX
+                alert('La carte de crédit a été ajoutée avec succès.');
+                
+                // Fermer le modal
+                paymentModal.style.display = 'none';
+                
+                // Simuler l'ajout de la carte à l'interface
+                const paymentList = document.querySelector('.payment-list');
+                const addPaymentCard = document.querySelector('.add-payment-card');
+                
+                const newCard = document.createElement('div');
+                newCard.className = 'payment-card';
+                newCard.innerHTML = `
+                    <div class="payment-info">
+                        <div class="payment-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        
+                        <div class="payment-details">
+                            <h3 class="payment-title">
+                                Carte Visa se terminant par 1234
+                            </h3>
+                            
+                            <p class="payment-expiry">Expire le 12/25</p>
+                            
+                            <span class="default-badge">Méthode par défaut</span>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-actions">
+                        <button class="btn btn-sm btn-danger delete-method-btn" data-method-id="new-card">Supprimer</button>
+                    </div>
+                `;
+                
+                paymentList.insertBefore(newCard, addPaymentCard);
+                
+                // Réinitialiser le formulaire
+                creditCardForm.reset();
+            });
+        }
+        
+        // Gestion du bouton PayPal
+        const paypalBtn = document.getElementById('paypal-btn');
+        
+        if (paypalBtn) {
+            paypalBtn.addEventListener('click', function() {
+                // Dans une implémentation réelle, cela redirigerait vers PayPal
+                alert('Vous seriez redirigé vers PayPal dans une implémentation réelle.');
+                
+                // Fermer le modal
+                paymentModal.style.display = 'none';
+            });
+        }
+        
+        // Gestion du bouton de confirmation de virement bancaire
+        const bankConfirmBtn = document.getElementById('bank-confirm-btn');
+        
+        if (bankConfirmBtn) {
+            bankConfirmBtn.addEventListener('click', function() {
+                // Dans une implémentation réelle, cela enregistrerait la confirmation
+                alert('Votre confirmation de virement a été enregistrée. Nous vérifierons la réception du paiement dans les prochains jours.');
+                
+                // Fermer le modal
+                paymentModal.style.display = 'none';
+            });
+        }
+        
+        // Gestion de la pagination
+        const prevBtn = document.querySelector('.pagination-btn.prev');
+        const nextBtn = document.querySelector('.pagination-btn.next');
+        const paginationInfo = document.querySelector('.pagination-info');
+        
+        if (prevBtn && nextBtn && paginationInfo) {
+            let currentPage = 1;
+            const totalPages = 2;
+            
+            prevBtn.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+            
+            function updatePagination() {
+                paginationInfo.textContent = `Page ${currentPage} sur ${totalPages}`;
+                
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages;
+                
+                // Dans une implémentation réelle, cela chargerait les données de la page correspondante
+            }
+        }
+    });
+</script>
+{% endblock %}

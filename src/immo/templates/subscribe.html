@@ -1,0 +1,315 @@
+{% extends "layout.html" %}
+
+{% block title %}S'abonner - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/subscription.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="subscription-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Choisissez votre formule</h1>
+            <p class="page-subtitle">Débloquez toutes les fonctionnalités pour gérer vos projets immobiliers efficacement</p>
+        </div>
+
+        <div class="pricing-toggle">
+            <span class="toggle-option {% if billing_cycle == 'monthly' %}active{% endif %}">Mensuel</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="billing-toggle" {% if billing_cycle == 'yearly' %}checked{% endif %}>
+                <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-option {% if billing_cycle == 'yearly' %}active{% endif %}">Annuel <span class="discount-badge">-20%</span></span>
+        </div>
+
+        <div class="pricing-plans">
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h2 class="plan-name">Gratuit</h2>
+                    <div class="plan-price">
+                        <span class="price">0€</span>
+                        <span class="period">pour toujours</span>
+                    </div>
+                </div>
+                
+                <div class="plan-features">
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>1 projet actif</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>5 étapes par projet</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Suivi de progression basique</span>
+                        </li>
+                        <li class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Partage de projets</span>
+                        </li>
+                        <li class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Stockage de documents</span>
+                        </li>
+                        <li class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Modèles de projets</span>
+                        </li>
+                        <li class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Support prioritaire</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="plan-cta">
+                    {% if current_plan == 'free' %}
+                    <button class="btn btn-outline" disabled>Votre formule actuelle</button>
+                    {% else %}
+                    <a href="/abonnement/downgrade/free" class="btn btn-outline">Rétrograder</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="plan-card popular">
+                <div class="popular-badge">Populaire</div>
+                <div class="plan-header">
+                    <h2 class="plan-name">Standard</h2>
+                    <div class="plan-price" data-monthly="19.99" data-yearly="15.99">
+                        <span class="price">{{ '15.99€' if billing_cycle == 'yearly' else '19.99€' }}</span>
+                        <span class="period">/ {{ 'mois (facturé annuellement)' if billing_cycle == 'yearly' else 'mois' }}</span>
+                    </div>
+                </div>
+                
+                <div class="plan-features">
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>5 projets actifs</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Étapes illimitées par projet</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Suivi de progression avancé</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Partage de projets</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>500 Mo de stockage de documents</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>5 modèles de projets</span>
+                        </li>
+                        <li class="feature-item disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Support prioritaire</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="plan-cta">
+                    {% if current_plan == 'standard' %}
+                    <button class="btn btn-primary" disabled>Votre formule actuelle</button>
+                    {% else %}
+                    <a href="/abonnement/subscribe/standard/{{ billing_cycle }}" class="btn btn-primary">Choisir cette formule</a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="plan-card">
+                <div class="plan-header">
+                    <h2 class="plan-name">Premium</h2>
+                    <div class="plan-price" data-monthly="39.99" data-yearly="31.99">
+                        <span class="price">{{ '31.99€' if billing_cycle == 'yearly' else '39.99€' }}</span>
+                        <span class="period">/ {{ 'mois (facturé annuellement)' if billing_cycle == 'yearly' else 'mois' }}</span>
+                    </div>
+                </div>
+                
+                <div class="plan-features">
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Projets illimités</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Étapes illimitées par projet</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Suivi de progression avancé</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Partage et collaboration en temps réel</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>2 Go de stockage de documents</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Modèles de projets illimités</span>
+                        </li>
+                        <li class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Support prioritaire 24/7</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="plan-cta">
+                    {% if current_plan == 'premium' %}
+                    <button class="btn btn-primary" disabled>Votre formule actuelle</button>
+                    {% else %}
+                    <a href="/abonnement/subscribe/premium/{{ billing_cycle }}" class="btn btn-primary">Choisir cette formule</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="subscription-faq">
+            <h2 class="faq-title">Questions fréquentes</h2>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Puis-je changer de formule à tout moment ?</h3>
+                        <button class="toggle-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui, vous pouvez passer à une formule supérieure à tout moment. Le montant sera calculé au prorata pour la période restante. Pour passer à une formule inférieure, le changement prendra effet à la fin de votre période de facturation en cours.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Comment fonctionne la facturation annuelle ?</h3>
+                        <button class="toggle-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Avec la facturation annuelle, vous payez pour 12 mois à l'avance et bénéficiez d'une réduction de 20% par rapport au tarif mensuel. Votre abonnement sera automatiquement renouvelé à la fin de la période de 12 mois, sauf si vous décidez de l'annuler.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Puis-je annuler mon abonnement à tout moment ?</h3>
+                        <button class="toggle-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui, vous pouvez annuler votre abonnement à tout moment depuis votre espace compte. Vous continuerez à avoir accès à votre formule jusqu'à la fin de la période de facturation en cours. Après cette date, votre compte passera automatiquement à la formule gratuite.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Quels moyens de paiement acceptez-vous ?</h3>
+                        <button class="toggle-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Nous acceptons les cartes de crédit (Visa, Mastercard, American Express), PayPal, et les virements bancaires pour les abonnements annuels. Toutes les transactions sont sécurisées et vos informations de paiement sont cryptées.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Y a-t-il une période d'essai ?</h3>
+                        <button class="toggle-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui, nous offrons une période d'essai de 14 jours pour les formules Standard et Premium. Vous pouvez tester toutes les fonctionnalités sans engagement et sans avoir à entrer vos informations de paiement. À la fin de la période d'essai, vous pourrez choisir de vous abonner ou de passer à la formule gratuite.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="subscription-guarantee">
+            <div class="guarantee-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="guarantee-content">
+                <h3 class="guarantee-title">Garantie satisfait ou remboursé de 30 jours</h3>
+                <p class="guarantee-text">Si vous n'êtes pas satisfait de nos services dans les 30 jours suivant votre abonnement, nous vous remboursons intégralement. Aucune question, aucune condition.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion du toggle de facturation
+        const billingToggle = document.getElementById('billing-toggle');
+        const toggleOptions = document.querySelectorAll('.toggle-option');
+        const planPrices = document.querySelectorAll('.plan-price');
+        
+        billingToggle.addEventListener('change', function() {
+            const cycle = this.checked ? 'yearly' : 'monthly';
+            
+            // Mettre à jour les classes actives
+            toggleOptions.forEach(option => {
+                option.classList.toggle('active');
+            });
+            
+            // Mettre à jour les prix affichés
+            planPrices.forEach(priceEl => {
+                if (priceEl.dataset.monthly && priceEl.dataset.yearly) {
+                    const price = this.checked ? priceEl.dataset.yearly : priceEl.dataset.monthly;
+                    const period = this.checked ? 'mois (facturé annuellement)' : 'mois';
+                    
+                    priceEl.querySelector('.price').textContent = price + '€';
+                    priceEl.querySelector('.period').textContent = '/ ' + period;
+                }
+            });
+            
+            // Mettre à jour les liens d'abonnement
+            const subscribeLinks = document.querySelectorAll('a[href*="/abonnement/subscribe/"]');
+            subscribeLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const newHref = href.replace(/(\/monthly|\/yearly)$/, '/' + cycle);
+                link.setAttribute('href', newHref);
+            });
+        });
+        
+        // Gestion des FAQ
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+            const toggleBtn = item.querySelector('.toggle-btn');
+            
+            question.addEventListener('click', function() {
+                const isOpen = item.classList.contains('open');
+                
+                // Fermer tous les items
+                faqItems.forEach(faqItem => {
+                    faqItem.classList.remove('open');
+                    faqItem.querySelector('.faq-answer').style.maxHeight = null;
+                    faqItem.querySelector('.toggle-btn i').className = 'fas fa-chevron-down';
+                });
+                
+                // Ouvrir l'item actuel si il n'était pas déjà ouvert
+                if (!isOpen) {
+                    item.classList.add('open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    toggleBtn.querySelector('i').className = 'fas fa-chevron-up';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+
+{% block title %}Modifier un projet - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/project-form.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="project-form-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Modifier le projet</h1>
+            <p class="page-subtitle">Mettez à jour les informations de votre projet immobilier</p>
+        </div>
+
+        <div class="form-container">
+            <form class="project-form" action="/projets/{{ project.id }}/modifier" method="post">
+                <div class="form-section">
+                    <h2 class="section-title">Informations générales</h2>
+                    
+                    <div class="form-group">
+                        <label for="title">Titre du projet <span class="required">*</span></label>
+                        <input type="text" id="title" name="title" required 
+                               placeholder="Ex: Achat appartement Paris 15ème" 
+                               minlength="3" maxlength="64"
+                               value="{{ project.title }}">
+                        <p class="field-hint">Donnez un titre clair et concis à votre projet (3-64 caractères)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description <span class="required">*</span></label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Décrivez votre projet en détail..." 
+                                  minlength="3" maxlength="1000" rows="5">{{ project.description }}</textarea>
+                        <p class="field-hint">Décrivez votre projet, ses objectifs et toute information pertinente (3-1000 caractères)</p>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Localisation et budget</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Ville</label>
+                            <select id="city" name="city_id">
+                                <option value="">Sélectionnez une ville</option>
+                                {% for city in cities %}
+                                <option value="{{ city.id }}" {% if project.city_id == city.id %}selected{% endif %}>{{ city.name }}, {{ city.country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="budget">Budget estimé <span class="required">*</span></label>
+                            <div class="input-with-addon">
+                                <input type="number" id="budget" name="budget" required min="0" step="1000" value="{{ project.budget }}">
+                                <select id="currency" name="currency_id" class="addon">
+                                    {% for currency in currencies %}
+                                    <option value="{{ currency.id }}" {% if project.currency_id == currency.id %}selected{% endif %}>{{ currency.symbol }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Calendrier prévisionnel</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="begin_at">Date de début</label>
+                            <input type="date" id="begin_at" name="begin_at" value="{{ project.begin_at|date('%Y-%m-%d') if project.begin_at else '' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end_at">Date de fin estimée</label>
+                            <input type="date" id="end_at" name="end_at" value="{{ project.end_at|date('%Y-%m-%d') if project.end_at else '' }}">
+                        </div>
+                    </div>
+                    
+                    <p class="field-hint">Les dates sont optionnelles et peuvent être modifiées ultérieurement</p>
+                </div>
+                
+                <div class="form-section">
+                    <h2 class="section-title">Statut du projet</h2>
+                    
+                    <div class="form-group">
+                        <label for="status">Statut actuel</label>
+                        <select id="status" name="status_project_id">
+                            {% for status in statuses %}
+                            <option value="{{ status.id }}" {% if project.status_project_id == status.id %}selected{% endif %}>{{ status.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="progress">Progression globale</label>
+                        <div class="progress-input-container">
+                            <input type="range" id="progress" name="progress" min="0" max="100" step="5" value="{{ project.progress }}">
+                            <span class="progress-value">{{ project.progress }}%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="/projets/{{ project.id }}" class="btn btn-outline">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validation des dates (fin après début)
+        const beginDateInput = document.getElementById('begin_at');
+        const endDateInput = document.getElementById('end_at');
+        
+        endDateInput.addEventListener('change', function() {
+            if (beginDateInput.value && this.value) {
+                const beginDate = new Date(beginDateInput.value);
+                const endDate = new Date(this.value);
+                
+                if (endDate < beginDate) {
+                    this.setCustomValidity('La date de fin doit être postérieure à la date de début');
+                } else {
+                    this.setCustomValidity('');
+                }
+            }
+        });
+        
+        beginDateInput.addEventListener('change', function() {
+            if (endDateInput.value) {
+                endDateInput.dispatchEvent(new Event('change'));
+            }
+        });
+        
+        // Mise à jour de l'affichage de la progression
+        const progressInput = document.getElementById('progress');
+        const progressValue = document.querySelector('.progress-value');
+        
+        progressInput.addEventListener('input', function() {
+            progressValue.textContent = this.value + '%';
+        });
+    });
+</script>
+{% endblock %}

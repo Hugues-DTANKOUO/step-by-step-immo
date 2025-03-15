@@ -102,6 +102,11 @@ async def read_root(request: Request, db: AsyncSession = Depends(get_db)):
 async def login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+# Route pour la page d'inscription
+@app.get("/register")
+async def register(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
 # Route pour le tableau de bord
 @app.get("/dashboard")
 async def dashboard(request: Request):
