@@ -1,0 +1,90 @@
+[tool.poetry]
+name = "Step by Step Immo"
+version = "0.1.0"
+description = "Guiding property projects in Africa with Python."
+authors = ["Hugues DTANKOUO <huguesdtankouo@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "immo", from = "src"}]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+gunicorn = "^23.0.0"
+poetry-plugin-export = "^1.9.0"
+sqlalchemy = "^2.0.38"
+python-jose = {extras = ["cryptography"], version = "^3.4.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.20"
+asyncpg = "^0.30.0"
+psycopg2-binary = "^2.9.10"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.8.1"
+alembic = "^1.15.1"
+greenlet = "^3.1.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+mypy = "^1.9.0"
+ruff = "^0.3.2"
+pytest-cov = "^6.0.0"
+pytest-asyncio = "^0.25.3"
+httpx = "^0.28.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+lint.select = ["A", "B", "E", "F", "I", "N", "W", "INP"]
+line-length = 120
+exclude = [
+    ".venv",
+    "build",
+]
+
+[tool.ruff.lint.isort]
+lines-between-types = 1
+lines-after-imports = 2
+combine-as-imports = true
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+explicit_package_bases = true
+namespace_packages = true
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "--cov=immo --cov-report=term-missing --cov-config=.coveragerc --cov-context=test"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["immo"]
+branch = true
+parallel = true
+relative_files = true
+omit = [
+    "src/immo/scripts.py",
+    "src/immo/interface.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]
+
+[tool.poetry.scripts]
+lint = "immo.scripts:run_lint"
+tests = "immo.scripts:run_tests"
+check = "immo.scripts:run_all_checks"
+server = "immo.scripts:run_server"

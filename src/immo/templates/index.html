@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %}Accueil - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Construis ton projet immobilier <span class="highlight">ÉTAPE</span> par <span class="highlight">ÉTAPE</span></h1>
+            <p class="hero-text">
+                Grâce à Step by Step Immo, fais de tes projets immobiliers en Afrique et dans la diaspora une réalité.
+                Parce que chaque étape de ton projet compte, tu peux en créer autant que tu veux et les gérer en toute simplicité.
+            </p>
+            <div class="hero-buttons">
+                <a href="/inscription" class="btn btn-primary btn-lg">Commencer maintenant</a>
+                <a href="#comment-ca-marche" class="btn btn-outline btn-lg">Comment ça marche</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{{ url_for('static', path='images/landing-page/black-man-on-phone.png') }}" alt="Projet immobilier">
+        </div>
+    </div>
+</section>
+
+<section class="features" id="comment-ca-marche">
+    <div class="container">
+        <h2 class="section-title">Comment ça marche</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-pencil-ruler"></i>
+                </div>
+                <h3 class="feature-title">Crée ton projet</h3>
+                <p class="feature-text">Définis les détails de ton projet immobilier et organise-le en étapes claires et réalisables.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title">Obtiens des conseils</h3>
+                <p class="feature-text">Accède à notre base de connaissances et bénéficie de conseils personnalisés grâce à l'intelligence artificielle.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="feature-title">Trouve des prestataires</h3>
+                <p class="feature-text">Connecte-toi avec des prestataires vérifiés et de confiance pour chaque étape de ton projet.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Suis ta progression</h3>
+                <p class="feature-text">Visualise l'avancement de ton projet et ajuste ta stratégie en fonction des résultats.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="cta-title">Prêt à concrétiser ton projet immobilier?</h2>
+            <p class="cta-text">Rejoins notre communauté et bénéficie de tous nos outils pour réussir ton projet.</p>
+            <a href="/inscription" class="btn btn-primary btn-lg">S'inscrire gratuitement</a>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials">
+    <div class="container">
+        <h2 class="section-title">Ce que disent nos utilisateurs</h2>
+        <div class="testimonials-slider">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p class="testimonial-text">"Grâce à Step by Step Immo, j'ai pu structurer mon projet de construction au Cameroun et trouver des prestataires fiables malgré la distance."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="{{ url_for('static', path='images/landing-page/hugues-dtankouo.png') }}" alt="Photo de Marie" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4 class="testimonial-name">Hugues D.</h4>
+                        <p class="testimonial-location">Montreal, Canada</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p class="testimonial-text">"La plateforme m'a permis de diviser mon projet en étapes claires et de suivre ma progression. Les conseils personnalisés ont été d'une aide précieuse."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="{{ url_for('static', path='images/landing-page/jaures-kamte.png') }}" alt="Photo de Jean" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4 class="testimonial-name">Jaures K.</h4>
+                        <p class="testimonial-location">Yaoundé, Cameroun</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    <p class="testimonial-text">"En tant qu'investisseur débutant, j'avais besoin d'un guide pour mon premier projet. Step by Step Immo a rendu le processus beaucoup moins intimidant."</p>
+                </div>
+                <div class="testimonial-author">
+                    <img src="{{ url_for('static', path='images/landing-page/joseph-tchinda.png') }}" alt="Photo de Sophie" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4 class="testimonial-name">Joseph T.</h4>
+                        <p class="testimonial-location">Montréal, Canada</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="newsletter">
+    <div class="container">
+        <div class="newsletter-content">
+            <h2 class="newsletter-title">Reste informé</h2>
+            <p class="newsletter-text">Inscris-toi à notre newsletter pour recevoir des conseils, des actualités et des opportunités immobilières.</p>
+            <form class="newsletter-form" action="/subscribe" method="post">
+                <input type="email" name="email" placeholder="Ton adresse email" required class="newsletter-input">
+                <button type="submit" class="btn btn-primary">S'abonner</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ url_for('static', path='js/index.js') }}" defer></script>
+{% endblock %}

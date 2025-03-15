@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Projet - Step by Step Immo</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/modern-styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="/" class="logo">
+                <img src="/static/images/landing-page/step_by_step_logo.png" alt="Step by Step Immo">
+                <div class="logo-text">STEP by <span>STEP</span></div>
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link">Accueil</a></li>
+                    <li><a href="/app/dashboard" class="nav-link active">Mes Projets</a></li>
+                    <li><a href="/app/services" class="nav-link">Services</a></li>
+                    <li><a href="/app/profile" class="nav-link">Profil</a></li>
+                </ul>
+                
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" data-logout>Déconnexion</button>
+                </div>
+                
+                <button class="menu-toggle" id="menu-toggle">
+                    <span class="burger"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a href="/" class="mobile-nav-link">Accueil</a></li>
+            <li><a href="/app/dashboard" class="mobile-nav-link active">Mes Projets</a></li>
+            <li><a href="/app/services" class="mobile-nav-link">Services</a></li>
+            <li><a href="/app/profile" class="mobile-nav-link">Profil</a></li>
+        </ul>
+        
+        <div class="mobile-nav-buttons">
+            <button class="btn btn-primary btn-block" data-logout>Déconnexion</button>
+        </div>
+    </div>
+    
+    <!-- Project Details Section -->
+    <section class="project-details">
+        <div class="container project-details-container">
+            <!-- Project Header -->
+            <div class="project-details-header" id="project-header">
+                <!-- Sera rempli dynamiquement par le JavaScript -->
+            </div>
+            
+            <!-- Project Tabs -->
+            <div class="project-details-tabs">
+                <div class="project-details-tab-buttons">
+                    <div class="project-details-tab-button active" data-tab="steps">Étapes</div>
+                    <div class="project-details-tab-button" data-tab="budget">Budget</div>
+                    <div class="project-details-tab-button" data-tab="timeline">Calendrier</div>
+                    <div class="project-details-tab-button" data-tab="documents">Documents</div>
+                </div>
+                
+                <!-- Tab Contents -->
+                <div class="project-details-tab-content" id="tab-steps">
+                    <div class="steps-header">
+                        <h2>Étapes du projet</h2>
+                        <button id="add-step-button" class="btn btn-primary">
+                            <span class="material-icons-round">add</span>
+                            Ajouter une étape
+                        </button>
+                    </div>
+                    
+                    <div class="steps-list" id="steps-list">
+                        <!-- Sera rempli dynamiquement par le JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="project-details-tab-content" id="tab-budget" style="display: none;">
+                    <div class="budget-overview">
+                        <h2>Aperçu du budget</h2>
+                        
+                        <div class="budget-cards">
+                            <div class="budget-card">
+                                <div class="budget-card-icon">
+                                    <span class="material-icons-round">account_balance_wallet</span>
+                                </div>
+                                <div class="budget-card-content">
+                                    <h3>Budget total</h3>
+                                    <div class="budget-amount" id="total-budget">0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="budget-card">
+                                <div class="budget-card-icon">
+                                    <span class="material-icons-round">paid</span>
+                                </div>
+                                <div class="budget-card-content">
+                                    <h3>Budget alloué</h3>
+                                    <div class="budget-amount" id="allocated-budget">0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="budget-card">
+                                <div class="budget-card-icon">
+                                    <span class="material-icons-round">savings</span>
+                                </div>
+                                <div class="budget-card-content">
+                                    <h3>Budget non alloué</h3>
+                                    <div class="budget-amount" id="unallocated-budget">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="budget-chart">
+                            <h3>Répartition du budget par étape</h3>
+                            <div class="chart-container" id="budget-chart-container">
+                                <!-- Le graphique sera généré par le JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-details-tab-content" id="tab-timeline" style="display: none;">
+                    <h2>Calendrier du projet</h2>
+                    
+                    <div class="timeline-container" id="timeline-container">
+                        <!-- La chronologie sera générée par le JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="project-details-tab-content" id="tab-documents" style="display: none;">
+                    <div class="documents-header">
+                        <h2>Documents</h2>
+                        <button id="upload-document-button" class="btn btn-primary">
+                            <span class="material-icons-round">upload_file</span>
+                            Ajouter un document
+                        </button>
+                    </div>
+                    
+                    <div class="documents-list" id="documents-list">
+                        <!-- La liste des documents sera générée par le JavaScript -->
+                        <div class="documents-placeholder">
+                            <span class="material-icons-round">description</span>
+                            <p>Aucun document pour le moment</p>
+                            <p>Ajoutez des documents relatifs à votre projet (plans, devis, contrats, etc.)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Modal d'ajout d'étape -->
+    <div class="modal" id="add-step-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Ajouter une étape</h2>
+                <button class="modal-close" id="close-step-modal">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="add-step-form">
+                    <div class="form-group">
+                        <label for="step-title">Titre de l'étape</label>
+                        <input type="text" id="step-title" class="form-control" placeholder="Ex: Acquisition du terrain">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step-description">Description</label>
+                        <textarea id="step-description" class="form-control" rows="4" placeholder="Décrivez cette étape en détail"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step-number">Numéro d'étape</label>
+                        <input type="number" id="step-number" class="form-control" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="step-budget">Budget</label>
+                        <input type="number" id="step-budget" class="form-control" min="0" placeholder="Budget alloué à cette étape">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="step-begin">Date de début</label>
+                            <input type="date" id="step-begin" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="step-end">Date de fin</label>
+                            <input type="date" id="step-end" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-step">Annuler</button>
+                <button class="btn btn-primary" id="save-step">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de modification d'étape -->
+    <div class="modal" id="edit-step-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Modifier l'étape</h2>
+                <button class="modal-close" id="close-edit-step-modal">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="edit-step-form">
+                    <input type="hidden" id="edit-step-id">
+                    
+                    <div class="form-group">
+                        <label for="edit-step-title">Titre de l'étape</label>
+                        <input type="text" id="edit-step-title" class="form-control" placeholder="Ex: Acquisition du terrain">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-step-description">Description</label>
+                        <textarea id="edit-step-description" class="form-control" rows="4" placeholder="Décrivez cette étape en détail"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-step-number">Numéro d'étape</label>
+                        <input type="number" id="edit-step-number" class="form-control" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-step-budget">Budget</label>
+                        <input type="number" id="edit-step-budget" class="form-control" min="0" placeholder="Budget alloué à cette étape">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-step-begin">Date de début</label>
+                            <input type="date" id="edit-step-begin" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-step-end">Date de fin</label>
+                            <input type="date" id="edit-step-end" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-step-progress">Progression (%)</label>
+                        <input type="range" id="edit-step-progress" class="form-range" min="0" max="100" step="5">
+                        <div class="progress-value"><span id="progress-value-display">0</span>%</div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="delete-step">Supprimer</button>
+                <button class="btn btn-secondary" id="cancel-edit-step">Annuler</button>
+                <button class="btn btn-primary" id="update-step">Mettre à jour</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal d'ajout de document -->
+    <div class="modal" id="upload-document-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Ajouter un document</h2>
+                <button class="modal-close" id="close-document-modal">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="upload-document-form">
+                    <div class="form-group">
+                        <label for="document-title">Titre du document</label>
+                        <input type="text" id="document-title" class="form-control" placeholder="Ex: Plan architectural">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="document-description">Description</label>
+                        <textarea id="document-description" class="form-control" rows="2" placeholder="Décrivez ce document"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="document-file">Fichier</label>
+                        <div class="file-upload">
+                            <input type="file" id="document-file" class="file-input">
+                            <label for="document-file" class="file-label">
+                                <span class="material-icons-round">cloud_upload</span>
+                                <span class="file-text">Choisir un fichier</span>
+                            </label>
+                            <div class="file-name" id="file-name"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="document-step">Étape associée (optionnel)</label>
+                        <select id="document-step" class="form-control">
+                            <option value="">Aucune étape spécifique</option>
+                            <!-- Les options seront générées dynamiquement -->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-document">Annuler</button>
+                <button class="btn btn-primary" id="save-document">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-company">
+                    <img src="/static/images/landing-page/step_by_step_logo_white.png" alt="Step by Step Immo">
+                    <p class="footer-text">
+                        Ce site est la propriété de <strong>Hugues DTANKOUO</strong>, Ingénieur de conception en informatique.
+                        Il se réserve tous les droits sur le contenu de ce site.
+                        Toute reproduction, même partielle, est interdite et passible de poursuites.
+                    </p>
+                    <p class="footer-text">
+                        ©2025 STEP by STEP IMMO - Tous droits réservés
+                    </p>
+                </div>
+                
+                <div class="footer-contact">
+                    <h3 class="footer-title">Contactez-nous</h3>
+                    <p class="footer-text">
+                        Pour l'instant, nous assurons un support uniquement pour nos utilisateurs ayant un projet en direction du <strong>Cameroun</strong> et du <strong>Canada</strong>, mais nous comptons nous étendre à d'autres pays dans le futur.
+                    </p>
+                    
+                    <div class="footer-contact-item">
+                        <span class="material-icons-round">phone</span>
+                        <span>+1 (819) 529-4795</span>
+                    </div>
+                    
+                    <div class="footer-contact-item">
+                        <span class="material-icons-round">email</span>
+                        <span>15p035@polytechnique.cm</span>
+                    </div>
+                    
+                    <div class="footer-social">
+                        <a href="http://www.facebook.com/ing.hugues.dtankouo" class="social-link" target="_blank">
+                            <span class="material-icons-round">facebook</span>
+                        </a>
+                        <a href="http://instagram.com/dtankouo" class="social-link" target="_blank">
+                            <span class="material-icons-round">camera_alt</span>
+                        </a>
+                        <a href="http://www.linkedin.com/in/dtankouo" class="social-link" target="_blank">
+                            <span class="material-icons-round">link</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-newsletter">
+                    <h3 class="footer-title">Support et aide</h3>
+                    <p class="footer-text">
+                        Besoin d'aide pour votre projet ? Notre équipe est disponible pour vous aider à chaque étape.
+                    </p>
+                    
+                    <a href="/app/support" class="btn btn-primary">
+                        <span class="material-icons-round">help_outline</span>
+                        Centre d'aide
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2025 Step by Step Immo. Tous droits réservés.</p>
+                
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Conditions d'utilisation</a>
+                    <a href="#" class="footer-link">Politique de confidentialité</a>
+                    <a href="#" class="footer-link">Mentions légales</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="/static/js/modern-scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<header class="toolbar">
+    <div class="title">
+        <!-- Le logo sera remplacé par l'image réelle -->
+        <img src="static/images/step_by_step_logo.png" alt="Step by Step Immo Logo" />
+    </div>
+    <div class="spacer"></div>
+    
+    {% if not user %}
+    <div class="toolbar-button">
+        <button onclick="goToLogin()" class="login-button" aria-label="Connecte-toi">
+            <span class="login-button-text black">Connexion</span>
+        </button>
+        <span> </span>
+        <button onclick="goToRegistration()" class="bg-olive-green register-button" aria-label="S'inscrire">
+            <span class="register-button-text white">Inscription</span>
+        </button>
+    </div>
+    {% else %}
+    <div class="toolbar-button">
+        <button onclick="goToCreateProject()" class="login-button" aria-label="Créer un projet">
+            <span class="login-button-text black">Créer un projet</span>
+        </button>
+        <span> </span>
+        <button onclick="logout()" class="bg-olive-green register-button" aria-label="Se déconnecter">
+            <span class="register-button-text white">Déconnexion</span>
+        </button>
+    </div>
+    {% endif %}
+</header>

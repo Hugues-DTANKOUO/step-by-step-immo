@@ -1,0 +1,201 @@
+<!-- Formulaire d'inscription -->
+<div id="registration-form" class="registration form-container {{ 'active' if registration_option == 'registration' else 'inactive' }}">
+    <div class="registration-field-container">
+        <label for="username" class="registration-label">Nom d'utilisateur</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="text" name="username"
+                   id="username"
+                   placeholder="Nom d'utilisateur"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="email" class="registration-label">Adresse courriel</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="email" name="email"
+                   id="email"
+                   placeholder="Adresse courriel"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="password" class="registration-label">Mot de passe</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="password" name="password"
+                   id="password"
+                   placeholder="Mot de passe"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="password-confirm" class="registration-label">Confirmer le mot de passe</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="password" name="password-confirm"
+                   id="password-confirm"
+                   placeholder="Confirmer le mot de passe"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="condition-term" class="registration-label">J'accepte les conditions d'utilisation</label>
+        <div class="registration-separator"> : </div>
+        <input type="checkbox" class="condition-term-input"
+                name="condition-term"
+                id="condition-term"
+        >
+    </div>
+    <div class="registration-have-account">
+        <span class="registration-have-account-text">Déjà un compte ? </span>
+        <span onclick="switchFormTo('login')" class="registration-have-account-link">Connecte-toi</span>
+    </div>
+    <div class="registration-button-container">
+        <button onclick="registerUser()" 
+                class="bg-olive-green registration-button"
+                aria-label="S'inscrire">
+            <span class="white">S'inscrire</span>
+        </button>
+    </div>
+</div>
+
+<!-- Formulaire de connexion -->
+<div id="login-form" class="registrations-login form-container {{ 'active' if registration_option == 'login' else 'inactive' }}">
+    <div class="registration-field-container">
+        <label for="login-email" class="registration-label">Adresse courriel</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="email"
+                   name="login-email"
+                   id="login-email"
+                   placeholder="Adresse courriel"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="login-password" class="registration-label">Mot de passe</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="password"
+                   name="login-password"
+                   id="login-password"
+                   placeholder="Mot de passe"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="remember-me" class="registration-label">Se souvenir de moi</label>
+        <div class="registration-separator"> : </div>
+        <input type="checkbox" class="remember-me-input"
+               name="remember-me"
+               id="remember-me"
+        >
+    </div>
+    <div class="registration-have-account">
+        <span class="registration-have-account-text">Pas encore de compte ? </span>
+        <span onclick="switchFormTo('registration')" class="login-have-not-account-link">Inscris-toi</span>
+    </div>
+    <div class="login-button-container">
+        <button onclick="loginUser()"
+                class="bg-steel-grey login-button-2"
+                aria-label="Se connecter"
+        >
+            <span class="black">Se connecter</span>
+        </button>
+    </div>
+</div>
+
+<!-- Formulaire de newsletter -->
+<div id="newsletter-form" class="registrations-newsletter form-container {{ 'active' if registration_option == 'newsletter' else 'inactive' }}">
+    <div class="registration-field-container">
+        <label for="news-letter-email" class="registration-label">Adresse courriel</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="email" name="news-letter-email"
+                   id="news-letter-email"
+                   placeholder="Adresse courriel"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="news-letter-names" class="registration-label">Noms</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="text" name="news-letter-names"
+                   id="news-letter-names"
+                   placeholder="Noms"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="news-letter-project-title" class="registration-label">Titre du projet</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="text"
+                   name="news-letter-project-title"
+                   id="news-letter-project-title"
+                   placeholder="Titre du projet"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="news-letter-location" class="registration-label">Localisation du projet</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="text" name="news-letter-location"
+                   id="news-letter-location"
+                   placeholder="Localisation du projet"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="news-letter-budget" class="registration-label">Budget du projet</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="text" name="news-letter-budget"
+                   id="news-letter-budget"
+                   placeholder="Budget du projet"
+            >
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="news-letter-project-dateline" class="registration-label">Date d'achèvement prévue</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-input">
+            <input type="date" name="news-letter-project-dateline"
+                   id="news-letter-project-dateline"
+                   placeholder="Date d'achèvement prévue"
+            >
+        </div>
+    </div>
+    <div class="registration-textarea-field-container">
+        <label for="news-letter-project-description" class="registration-label">Détails du projet</label>
+        <div class="registration-separator"> : </div>
+        <div class="registration-textarea">
+            <textarea name="news-letter-project-description"
+                      id="news-letter-project-description"
+                      maxlength="1000"
+                      placeholder="Détails du projet"
+            ></textarea>
+        </div>
+    </div>
+    <div class="registration-field-container">
+        <label for="news-letter-terms" class="registration-label">Je confirme avoir lu et compris la politique de gestion des données</label>
+        <div class="registration-separator"> : </div>
+        <input type="checkbox"
+               class="news-letter-terms-input"
+               name="news-letter-terms"
+               id="news-letter-terms"
+        >
+    </div>
+    <div class="news-letter-button-container">
+        <button onclick="subscribeToNewsletter()"
+                class="bg-black news-letter-button"
+                aria-label="Souscrire"
+        >
+            <span class="white">Souscrire</span>
+        </button>
+    </div>
+</div>

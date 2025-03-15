@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Step by Step Immo{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='images/favicon.ico') }}">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', path='js/main.js') }}" defer></script>
+    {% block extra_js_head %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/">
+                        <img src="{{ url_for('static', path='images/step_by_step_logo.png') }}" alt="Step by Step Immo Logo">
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul class="nav-links">
+                        <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Accueil</a></li>
+                        <li><a href="/projets" class="{% if request.path == '/projets' %}active{% endif %}">Projets</a></li>
+                        <li><a href="/services" class="{% if request.path == '/services' %}active{% endif %}">Services</a></li>
+                        <li><a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    {% if user %}
+                        <a href="/nouveau-projet" class="btn btn-outline">Créer un projet</a>
+                        <a href="/logout" class="btn btn-primary">Déconnexion</a>
+                    {% else %}
+                        <a href="/login" class="btn btn-outline">Connexion</a>
+                        <a href="/inscription" class="btn btn-primary">Inscription</a>
+                    {% endif %}
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    <span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="{{ url_for('static', path='images/step_by_step_logo.png') }}" alt="Step by Step Immo Logo">
+                    <p>Construisez votre projet immobilier étape par étape</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Navigation</h3>
+                        <ul>
+                            <li><a href="/">Accueil</a></li>
+                            <li><a href="/projets">Projets</a></li>
+                            <li><a href="/services">Services</a></li>
+                            <li><a href="/contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Légal</h3>
+                        <ul>
+                            <li><a href="/mentions-legales">Mentions légales</a></li>
+                            <li><a href="/politique-confidentialite">Politique de confidentialité</a></li>
+                            <li><a href="/conditions-utilisation">Conditions d'utilisation</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Contact</h3>
+                        <ul>
+                            <li><a href="mailto:contact@stepbystepimmo.com">contact@stepbystepimmo.com</a></li>
+                            <li><a href="tel:+18195294795">+1(819) 529-4795</a></li>
+                        </ul>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Step by Step Immo. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo">
+                <img src="{{ url_for('static', path='images/step_by_step_logo.png') }}" alt="Step by Step Immo Logo">
+            </div>
+            <button class="mobile-menu-close" aria-label="Fermer le menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav">
+            <ul>
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Accueil</a></li>
+                <li><a href="/projets" class="{% if request.path == '/projets' %}active{% endif %}">Projets</a></li>
+                <li><a href="/services" class="{% if request.path == '/services' %}active{% endif %}">Services</a></li>
+                <li><a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="mobile-auth">
+            {% if user %}
+                <a href="/nouveau-projet" class="btn btn-outline btn-block">Créer un projet</a>
+                <a href="/logout" class="btn btn-primary btn-block">Déconnexion</a>
+            {% else %}
+                <a href="/login" class="btn btn-outline btn-block">Connexion</a>
+                <a href="/inscription" class="btn btn-primary btn-block">Inscription</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% block extra_js_body %}{% endblock %}
+</body>
+</html>

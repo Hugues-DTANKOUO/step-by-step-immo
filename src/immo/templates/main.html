@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block title %}Tableau de bord - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='css/main2.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Bienvenue, {{ user.first_name if user else 'Utilisateur' }}</h1>
+            <p class="dashboard-subtitle">Gérez vos projets immobiliers et suivez votre progression</p>
+        </div>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ projects|length if projects else 0 }}</h3>
+                    <p class="stat-label">Projets actifs</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ completed_steps if completed_steps else 0 }}</h3>
+                    <p class="stat-label">Étapes complétées</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ services|length if services else 0 }}</h3>
+                    <p class="stat-label">Services connectés</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-value">{{ days_active if days_active else 0 }}</h3>
+                    <p class="stat-label">Jours actifs</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="dashboard-projects">
+                <div class="section-header">
+                    <h2 class="section-title">Mes projets</h2>
+                    <a href="/nouveau-projet" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Nouveau projet
+                    </a>
+                </div>
+
+                {% if projects and projects|length > 0 %}
+                <div class="projects-grid">
+                    {% for project in projects %}
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-title">{{ project.name }}</h3>
+                            <span class="project-status {{ project.status|lower }}">{{ project.status }}</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: {{ project.progress }}%"></div>
+                            </div>
+                            <span class="progress-text">{{ project.progress }}% complété</span>
+                        </div>
+                        <div class="project-details">
+                            <div class="project-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ project.location }}</span>
+                            </div>
+                            <div class="project-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Créé le {{ project.created_at }}</span>
+                            </div>
+                            <div class="project-detail">
+                                <i class="fas fa-tasks"></i>
+                                <span>{{ project.completed_steps }}/{{ project.total_steps }} étapes</span>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="/projets/{{ project.id }}" class="btn btn-outline btn-sm">Voir détails</a>
+                            <a href="/projets/{{ project.id }}/editer" class="btn btn-outline btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="empty-title">Aucun projet pour le moment</h3>
+                    <p class="empty-text">Commencez par créer votre premier projet immobilier</p>
+                    <a href="/nouveau-projet" class="btn btn-primary">Créer un projet</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="dashboard-sidebar">
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Prochaines étapes</h3>
+                    {% if next_steps and next_steps|length > 0 %}
+                    <ul class="steps-list">
+                        {% for step in next_steps %}
+                        <li class="step-item">
+                            <div class="step-info">
+                                <h4 class="step-title">{{ step.title }}</h4>
+                                <p class="step-project">{{ step.project_name }}</p>
+                            </div>
+                            <span class="step-date">{{ step.due_date }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="empty-text">Aucune étape à venir</p>
+                    {% endif %}
+                </div>
+
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Prestataires recommandés</h3>
+                    {% if recommended_services and recommended_services|length > 0 %}
+                    <ul class="services-list">
+                        {% for service in recommended_services %}
+                        <li class="service-item">
+                            <div class="service-icon">
+                                <i class="{{ service.icon }}"></i>
+                            </div>
+                            <div class="service-info">
+                                <h4 class="service-name">{{ service.name }}</h4>
+                                <p class="service-category">{{ service.category }}</p>
+                            </div>
+                            <a href="/services/{{ service.id }}" class="btn btn-outline btn-xs">Voir</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="empty-text">Aucun prestataire recommandé</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ url_for('static', path='js/main.js') }}" defer></script>
+{% endblock %}

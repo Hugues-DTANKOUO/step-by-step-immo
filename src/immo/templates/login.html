@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Connexion - Step by Step Immo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1 class="auth-title">Connexion</h1>
+                    <p class="auth-subtitle">Accède à ton compte pour gérer tes projets immobiliers</p>
+                </div>
+                
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endif %}
+                
+                <form class="auth-form" action="/login" method="post">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-group">
+                            <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" name="email" placeholder="Ton adresse email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <div class="input-group">
+                            <span class="input-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" name="password" placeholder="Ton mot de passe" required>
+                            <button type="button" class="password-toggle" aria-label="Afficher/masquer le mot de passe">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Se souvenir de moi</label>
+                        </div>
+                        <a href="/mot-de-passe-oublie" class="forgot-password">Mot de passe oublié?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                </form>
+                
+                <div class="auth-divider">
+                    <span>ou</span>
+                </div>
+                
+                <div class="social-login">
+                    <button class="btn btn-social btn-google">
+                        <i class="fab fa-google"></i>
+                        <span>Continuer avec Google</span>
+                    </button>
+                    <button class="btn btn-social btn-facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>Continuer avec Facebook</span>
+                    </button>
+                </div>
+                
+                <div class="auth-footer">
+                    <p>Tu n'as pas encore de compte? <a href="/inscription">S'inscrire</a></p>
+                </div>
+            </div>
+            
+            <div class="auth-image">
+                <img src="{{ url_for('static', path='images/landing-page/maison-type.png') }}" alt="Projet immobilier">
+                <div class="auth-image-overlay">
+                    <h2>Construis ton avenir immobilier</h2>
+                    <p>Rejoins notre communauté et transforme tes projets en réalité, étape par étape.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js_body %}
+<script src="{{ url_for('static', path='js/login.js') }}" defer></script>
+{% endblock %}
