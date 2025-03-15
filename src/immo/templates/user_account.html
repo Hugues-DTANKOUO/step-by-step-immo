@@ -32,7 +32,7 @@
                     </div>
                     <h2 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h2>
                     <p class="profile-email">{{ user.email }}</p>
-                    <p class="profile-member-since">Membre depuis {{ user.created_at|date('%d/%m/%Y') }}</p>
+                    <p class="profile-member-since">Membre depuis {{ user.created_at }}</p>
                 </div>
 
                 <nav class="account-nav">
@@ -198,7 +198,7 @@
                                     </div>
                                     <div class="session-details">
                                         <span class="session-location">{{ session.location }}</span>
-                                        <span class="session-time">Dernière activité: {{ session.last_activity|date('%d/%m/%Y %H:%M') }}</span>
+                                        <span class="session-time">Dernière activité: {{ session.last_activity }}</span>
                                     </div>
                                 </div>
                                 
@@ -238,7 +238,7 @@
                                 
                                 <div class="detail-item">
                                     <span class="detail-label">Prochaine facturation</span>
-                                    <span class="detail-value">{{ user.subscription.next_billing_date|date('%d/%m/%Y') }}</span>
+                                    <span class="detail-value">{{ user.subscription.next_billing_date }}</span>
                                 </div>
                                 
                                 <div class="detail-item">
@@ -261,7 +261,7 @@
                             {% for invoice in user.invoices %}
                             <div class="invoice-item">
                                 <div class="invoice-info">
-                                    <span class="invoice-date">{{ invoice.date|date('%d/%m/%Y') }}</span>
+                                    <span class="invoice-date">{{ invoice.date }}</span>
                                     <span class="invoice-amount">{{ invoice.amount }} {{ invoice.currency }}</span>
                                 </div>
                                 

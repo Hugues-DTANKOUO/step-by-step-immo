@@ -112,6 +112,333 @@ async def register(request: Request):
 async def subscribe(request: Request):
     return templates.TemplateResponse("subscribe.html", {"request": request})
 
+# Route pour gérer les abonnements
+@app.get("/my-subscription", response_class=HTMLResponse)
+async def manage_subscription(request: Request):
+    """Page for managing the current user's subscription."""
+    # Mock data for user
+    user = {
+        "id": 1,
+        "username": "demo_user",
+        "email": "demo@example.com",
+        "first_name": "Demo",
+        "last_name": "User"
+    }
+    
+    # Mock data for user's subscription
+    subscription = {
+        "plan_name": "Standard",
+        "status": "active",
+        "status_label": "Active",
+        "price": "9.99",
+        "currency": "$",
+        "interval": "month",
+        "billing_cycle": "monthly",
+        "next_billing_date": "2025-04-15",
+        "start_date": "2025-03-15",
+        "payment_method": "Visa ending in 1234",
+        "auto_renew": True
+    }
+    
+    # Mock data for invoices
+    invoices = [
+        {
+            "id": 1,
+            "date": "2025-03-15",
+            "description": "Standard Plan - Monthly",
+            "amount": "9.99",
+            "currency": "$",
+            "status": "paid",
+            "status_label": "Paid",
+            "pdf_url": "#"
+        },
+        {
+            "id": 2,
+            "date": "2025-02-15",
+            "description": "Standard Plan - Monthly",
+            "amount": "9.99",
+            "currency": "$",
+            "status": "paid",
+            "status_label": "Paid",
+            "pdf_url": "#"
+        }
+    ]
+    
+    # Mock data for payment methods
+    payment_methods = [
+        {
+            "id": 1,
+            "type": "credit_card",
+            "brand": "Visa",
+            "last4": "1234",
+            "exp_month": "12",
+            "exp_year": "2026",
+            "is_default": True
+        },
+        {
+            "id": 2,
+            "type": "paypal",
+            "email": "demo@example.com",
+            "is_default": False
+        }
+    ]
+
+    return templates.TemplateResponse(
+        "manage_subscription.html",
+        {
+            "request": request,
+            "user": user,
+            "subscription": subscription,
+            "invoices": invoices,
+            "payment_methods": payment_methods,
+            "next_billing_date": "2025-04-15",
+            "app_name": APP_NAME,
+            "year": 2025,
+        },
+    )
+
+# Route pour la page de profil utilisateur
+@app.get("/profile", response_class=HTMLResponse)
+async def user_profile(request: Request):
+    """Page de profil utilisateur."""
+    # Exemple de données à passer au template
+
+    subscription = {
+        "plan_name": "Standard",
+        "status": "active",
+        "status_label": "Active",
+        "price": "9.99",
+        "currency": "$",
+        "interval": "month",
+        "billing_cycle": "monthly",
+        "next_billing_date": "15/04/2025",
+        "start_date": "15/03/2025",
+        "payment_method": "Visa ending in 1234",
+        "auto_renew": True
+    }
+
+    notification_settings = {
+        "email_notifications": True,
+        "push_notifications": True,
+        "sms_notifications": False,
+        "email_project_updates": True,
+        "email_newsletter": False
+    }
+
+    privaty_settings = {
+        "profile_visibility": 'public',
+        "allow_contact": True,
+        "allow_messages": True
+    }
+
+    user_data = {
+        "id": 1,
+        "username": "dtankouo",
+        "email": "hugues@stepbystepimmo.com",
+        "first_name": "Hugues",
+        "last_name": "Dtankouo",
+        "phone": "0123456789",
+        "address": "123, Rue de la Demo",
+        "city": "Montreal",
+        "country": "Canada",
+        "postal_code": "75000",
+        "created_at": "15/03/2025",
+        "last_login": "15/03/2025",
+        "last_activity": "15/03/2025 12:30",
+        "subscription": subscription,
+        "notification_settings": notification_settings,
+        "privacy_settings": privaty_settings,
+    }  
+    return templates.TemplateResponse(
+        "user_account.html",
+        {
+            "request": request,
+            "user": user_data,
+            "app_name": APP_NAME,
+            "year": 2025,
+        },
+    )
+
+# Route pour créer un projet
+@app.get("/create-project", response_class=HTMLResponse)
+async def create_project(request: Request):
+    """Page pour créer un nouveau projet."""
+    # Exemple de données à passer au template
+    user_data = {
+        "id": 1,
+        "username": "dtankouo",
+        "email": "hugues@stepbystepimmo.com",
+        "first_name": "Hugues",
+        "last_name": "Dtankouo",
+        "phone": "0123456789",
+        "address": "123, Rue de la Demo",
+        "city": "Montreal",
+        "country": "Canada",
+        "postal_code": "75000",
+        "created_at": "15/03/2025",
+        "last_login": "15/03/2025",
+        "last_activity": "15/03/2025 12:30",
+    }
+
+    cities = [
+        {
+            "id": 1,
+            "name": "Douala",
+            "country": {
+                "id": 1,
+                "name": "Cameroun",
+                "code": "CM",
+            }
+        },
+        {
+            "id": 2,
+            "name": "Yaoundé",
+            "country": {
+                "id": 1,
+                "name": "Cameroun",
+                "code": "CM",
+            }
+        },
+        {
+            "id": 3,
+            "name": "Paris",
+            "country": {
+                "id": 2,
+                "name": "France",
+                "code": "FR",
+            }
+        },
+        {
+            "id": 4,
+            "name": "Montreal",
+            "country": {
+                "id": 3,
+                "name": "Canada",
+                "code": "CA",
+            }
+        },
+        {
+            "id": 5,
+            "name": "Abidjan",
+            "country": {
+                "id": 4,
+                "name": "Côte d'Ivoire",
+                "code": "CI",
+            }
+        },
+        {
+            "id": 6,
+            "name": "Cotonou",
+            "country": {
+                "id": 5,
+                "name": "Bénin",
+                "code": "BJ",
+            }
+        },
+        {
+            "id": 7,
+            "name": "Kinshasa",
+            "country": {
+                "id": 6,
+                "name": "RDC",
+                "code": "CD",
+            }
+        }
+    ]
+
+    currencies = [
+        {
+        "id": 1,
+        "name": "Dollar américain",
+        "symbol": "$",
+        "code": "USD",
+        },
+        {
+        "id": 2,
+        "name": "Euro",
+        "symbol": "€",
+        "code": "EUR",
+        },
+        {
+        "id": 3,
+        "name": "Franc CFA",
+        "symbol": "Fcfa",
+        "code": "XAF",
+        },
+        {
+        "id": 4,
+        "name": "Dollar canadien",
+        "symbol": "$",
+        "code": "CAD",
+        },
+    ]
+
+    return templates.TemplateResponse(
+        "create_project.html",
+        {
+            "request": request,
+            "cities": cities,
+            "currencies": currencies,
+            "user": user_data,
+            "app_name": APP_NAME,
+            "year": 2025,
+        },
+    )
+
+# Route pour créer une étape de projet
+@app.get("/add-step", response_class=HTMLResponse)
+async def create_step(request: Request):
+    """Page pour créer une nouvelle étape de projet."""
+    # Exemple de données à passer au template
+    user_data = {
+        "id": 1,
+        "username": "dtankouo",
+        "email": "hugues@stepbystepimmo.com",
+        "first_name": "Hugues",
+        "last_name": "Dtankouo",
+        "phone": "0123456789",
+        "address": "123, Rue de la Demo",
+        "city": "Montreal",
+        "country": "Canada",
+        "postal_code": "75000",
+        "created_at": "15/03/2025",
+        "last_login": "15/03/2025",
+        "last_activity": "15/03/2025 12:30",
+    }
+
+    project = {
+        "id": 1,
+        "title": "Achat d'un terrain titré à Douala",
+        "description": "Achat d'un terrain titré de 500 m² à Douala pour la construction d'une maison",
+        "budget": 100000,
+        "begin_at": "15/03/2025",
+        "end_at": "15/06/2025",
+        "progress": 65,
+        "unallocated_budget": 30000,
+        "city": "Douala",
+        "currency": {
+            "id": 3,
+            "name": "Franc CFA",
+            "symbol": "Fcfa",
+            "code": "XAF",
+        },
+        "status": "active",
+        "created_at": "15/03/2025",
+        "completed_steps": 3,
+        "total_steps": 5
+    }
+
+    return templates.TemplateResponse(
+        "add_step.html",
+        {
+            "request": request,
+            "user": user_data,
+            "project": project,
+            "app_name": APP_NAME,
+            "year": 2025,
+        },
+    )
+
 # Route pour le tableau de bord
 @app.get("/dashboard")
 async def dashboard(request: Request):

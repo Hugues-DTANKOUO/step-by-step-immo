@@ -98,6 +98,13 @@
   .form-group {
     margin-bottom: 20px;
   }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
   
   .form-group:last-child {
     margin-bottom: 0;
@@ -106,12 +113,10 @@
   .form-row {
     display: flex;
     gap: 20px;
-    margin-bottom: 20px;
   }
   
   .form-row .form-group {
     flex: 1;
-    margin-bottom: 0;
   }
   
   label {
@@ -163,28 +168,65 @@
     margin-top: 5px;
   }
   
-  /* Input with Addon */
-  .input-with-addon {
-    display: flex;
-    align-items: center;
+/* Style de base pour tous les champs de formulaire */
+select, input, .input-with-addon {
+    height: 45px;
+    border-radius: 8px;
+    border: 1px solid #dcdfe6;
+    transition: all 0.3s;
+    background-color: #fff;
+    width: 100%;
+    font-size: 15px;
   }
+
+  /* Focus sur les champs */
+select:focus, input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    outline: none;
+  }
+
+  /* Style spécifique pour le sélecteur de ville */
+.form-group select {
+    padding: 0 12px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23555' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+  }
+
+  /* Conteneur d'input avec addon (budget + devise) */
+.input-with-addon {
+    display: flex;
+    border: none;
+    padding: 0;
+    overflow: hidden;
+  }
+  
   
   .input-with-addon input {
     flex: 1;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 8px 0 0 8px;
+    border-right: none;
+    padding: 0 15px;
+    width: calc(100% - 70px); /* Ajustement pour équilibrer avec l'addon */
   }
   
   .input-with-addon .addon {
-    padding: 12px 15px;
-    background-color: var(--background-color);
-    border: 1px solid var(--border-color);
+    min-width: 70px; /* Augmentation de la largeur minimale */
+    width: auto; /* Permet de s'adapter au contenu */
+    padding: 0 12px; /* Ajoute un peu d'espace de chaque côté */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f7fa;
+    border: 1px solid #dcdfe6;
     border-left: none;
-    border-top-right-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-    color: var(--text-color);
-    font-size: 16px;
-    white-space: nowrap;
+    border-radius: 0 8px 8px 0;
+    color: #606266;
+    font-weight: 500;
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
   }
   
   /* Checkbox Group */

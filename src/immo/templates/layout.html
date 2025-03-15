@@ -31,7 +31,7 @@
             <div class="header-content">
                 <div class="logo">
                     <a href="/">
-                        <img src="{{ url_for('static', path='images/step_by_step_logo.png') }}" alt="Step by Step Immo Logo">
+                        <img src="{{ url_for('static', path='images/logo.png') }}" alt="Step by Step Immo Logo">
                     </a>
                 </div>
                 <nav class="main-nav">
@@ -44,7 +44,7 @@
                 </nav>
                 <div class="auth-buttons">
                     {% if user %}
-                        <a href="/nouveau-projet" class="btn btn-outline">Créer un projet</a>
+                        <a href="/create-project" class="btn btn-outline">Créer un projet</a>
                         <a href="/logout" class="btn btn-primary">Déconnexion</a>
                     {% else %}
                         <a href="/login" class="btn btn-outline">Connexion</a>
@@ -66,7 +66,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="{{ url_for('static', path='images/step_by_step_logo.png') }}" alt="Step by Step Immo Logo">
+                    <img src="{{ url_for('static', path='images/logo-white.png') }}" alt="Step by Step Immo Logo">
                     <p>Construisez votre projet immobilier étape par étape</p>
                 </div>
                 <div class="footer-links">
@@ -112,7 +112,7 @@
     <div class="mobile-menu">
         <div class="mobile-menu-header">
             <div class="logo">
-                <img src="{{ url_for('static', path='images/step_by_step_logo.png') }}" alt="Step by Step Immo Logo">
+                <img src="{{ url_for('static', path='images/logo.png') }}" alt="Step by Step Immo Logo">
             </div>
             <button class="mobile-menu-close" aria-label="Fermer le menu">
                 <i class="fas fa-times"></i>

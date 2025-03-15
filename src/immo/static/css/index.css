@@ -7,7 +7,7 @@
 .hero {
     padding: var(--spacing-xxl) 0;
     background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
-    background-image: url('../images/pattern.svg');
+    background-image: url('/static/images/pattern.svg');
     position: relative;
     overflow: hidden;
   }

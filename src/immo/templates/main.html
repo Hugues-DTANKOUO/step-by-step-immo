@@ -58,7 +58,7 @@
             <div class="dashboard-projects">
                 <div class="section-header">
                     <h2 class="section-title">Mes projets</h2>
-                    <a href="/nouveau-projet" class="btn btn-primary btn-sm">
+                    <a href="/create-project" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nouveau projet
                     </a>
                 </div>
@@ -71,7 +71,7 @@
                             <h3 class="project-title">{{ project.name }}</h3>
                             <span class="project-status {{ project.status|lower }}">{{ project.status }}</span>
                         </div>
-                        <div class="project-progress">
+                        <div class="project-progress" style="width: {{ project.progress }}%;">
                             <div class="progress-bar">
                                 <div class="progress"></div>
                             </div>

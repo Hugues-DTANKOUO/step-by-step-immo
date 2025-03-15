@@ -20,7 +20,7 @@
                 <input type="checkbox" id="billing-toggle" {% if billing_cycle == 'yearly' %}checked{% endif %}>
                 <span class="toggle-slider"></span>
             </label>
-            <span class="toggle-option {% if billing_cycle == 'yearly' %}active{% endif %}">Annuel <span class="discount-badge">-20%</span></span>
+            <span class="toggle-option {% if billing_cycle == 'yearly' %}active{% endif %}">Annuel <span class="discount-badge">-25%</span></span>
         </div>
 
         <div class="pricing-plans">
@@ -28,7 +28,7 @@
                 <div class="plan-header">
                     <h2 class="plan-name">Gratuit</h2>
                     <div class="plan-price">
-                        <span class="price">0€</span>
+                        <span class="price">0$</span>
                         <span class="period">pour toujours</span>
                     </div>
                 </div>
@@ -50,10 +50,6 @@
                         <li class="feature-item disabled">
                             <i class="fas fa-times"></i>
                             <span>Partage de projets</span>
-                        </li>
-                        <li class="feature-item disabled">
-                            <i class="fas fa-times"></i>
-                            <span>Stockage de documents</span>
                         </li>
                         <li class="feature-item disabled">
                             <i class="fas fa-times"></i>
@@ -79,8 +75,8 @@
                 <div class="popular-badge">Populaire</div>
                 <div class="plan-header">
                     <h2 class="plan-name">Standard</h2>
-                    <div class="plan-price" data-monthly="19.99" data-yearly="15.99">
-                        <span class="price">{{ '15.99€' if billing_cycle == 'yearly' else '19.99€' }}</span>
+                    <div class="plan-price" data-monthly="9.99" data-yearly="7.49">
+                        <span class="price">{{ '7.49$' if billing_cycle == 'yearly' else '9.99$' }}</span>
                         <span class="period">/ {{ 'mois (facturé annuellement)' if billing_cycle == 'yearly' else 'mois' }}</span>
                     </div>
                 </div>
@@ -105,10 +101,6 @@
                         </li>
                         <li class="feature-item">
                             <i class="fas fa-check"></i>
-                            <span>500 Mo de stockage de documents</span>
-                        </li>
-                        <li class="feature-item">
-                            <i class="fas fa-check"></i>
                             <span>5 modèles de projets</span>
                         </li>
                         <li class="feature-item disabled">
@@ -130,8 +122,8 @@
             <div class="plan-card">
                 <div class="plan-header">
                     <h2 class="plan-name">Premium</h2>
-                    <div class="plan-price" data-monthly="39.99" data-yearly="31.99">
-                        <span class="price">{{ '31.99€' if billing_cycle == 'yearly' else '39.99€' }}</span>
+                    <div class="plan-price" data-monthly="19.99" data-yearly="15.99">
+                        <span class="price">{{ '15.99$' if billing_cycle == 'yearly' else '19.99$' }}</span>
                         <span class="period">/ {{ 'mois (facturé annuellement)' if billing_cycle == 'yearly' else 'mois' }}</span>
                     </div>
                 </div>
@@ -153,10 +145,6 @@
                         <li class="feature-item">
                             <i class="fas fa-check"></i>
                             <span>Partage et collaboration en temps réel</span>
-                        </li>
-                        <li class="feature-item">
-                            <i class="fas fa-check"></i>
-                            <span>2 Go de stockage de documents</span>
                         </li>
                         <li class="feature-item">
                             <i class="fas fa-check"></i>
@@ -199,7 +187,7 @@
                         <button class="toggle-btn"><i class="fas fa-chevron-down"></i></button>
                     </div>
                     <div class="faq-answer">
-                        <p>Avec la facturation annuelle, vous payez pour 12 mois à l'avance et bénéficiez d'une réduction de 20% par rapport au tarif mensuel. Votre abonnement sera automatiquement renouvelé à la fin de la période de 12 mois, sauf si vous décidez de l'annuler.</p>
+                        <p>Avec la facturation annuelle, vous payez pour 12 mois à l'avance et bénéficiez d'une réduction de 25% par rapport au tarif mensuel. Votre abonnement sera automatiquement renouvelé à la fin de la période de 12 mois, sauf si vous décidez de l'annuler.</p>
                     </div>
                 </div>
                 
@@ -270,7 +258,7 @@
                     const price = this.checked ? priceEl.dataset.yearly : priceEl.dataset.monthly;
                     const period = this.checked ? 'mois (facturé annuellement)' : 'mois';
                     
-                    priceEl.querySelector('.price').textContent = price + '€';
+                    priceEl.querySelector('.price').textContent = price + '$';
                     priceEl.querySelector('.period').textContent = '/ ' + period;
                 }
             });

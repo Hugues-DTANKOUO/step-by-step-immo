@@ -34,12 +34,12 @@
                     
                     <div class="info-item">
                         <span class="info-label">Prochaine facturation</span>
-                        <span class="info-value">{{ subscription.next_billing_date|date('%d/%m/%Y') }}</span>
+                        <span class="info-value">{{ subscription.next_billing_date }}</span>
                     </div>
                     
                     <div class="info-item">
                         <span class="info-label">Date de début</span>
-                        <span class="info-value">{{ subscription.start_date|date('%d/%m/%Y') }}</span>
+                        <span class="info-value">{{ subscription.start_date }}</span>
                     </div>
                     
                     <div class="info-item">
@@ -127,7 +127,7 @@
                     <tbody>
                         {% for invoice in invoices %}
                         <tr>
-                            <td>{{ invoice.date|date('%d/%m/%Y') }}</td>
+                            <td>{{ invoice.date }}</td>
                             <td>{{ invoice.description }}</td>
                             <td>{{ invoice.amount }} {{ invoice.currency }}</td>
                             <td><span class="invoice-status {{ invoice.status }}">{{ invoice.status_label }}</span></td>
