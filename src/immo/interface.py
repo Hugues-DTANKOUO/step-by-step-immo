@@ -107,6 +107,11 @@ async def login(request: Request):
 async def register(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
+# Route pour souscrire à un abonnement
+@app.get("/subscribe")
+async def subscribe(request: Request):
+    return templates.TemplateResponse("subscribe.html", {"request": request})
+
 # Route pour le tableau de bord
 @app.get("/dashboard")
 async def dashboard(request: Request):
