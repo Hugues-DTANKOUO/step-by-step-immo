@@ -3,6 +3,10 @@
   <h1 style="display: inline-block; vertical-align: middle;">Step by Step Immo</h1>
 </div><br>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 > Construis ton projet immobilier en Afrique et dans la diaspora, étape par étape.
 
 ## 📌 Aperçu du Projet
