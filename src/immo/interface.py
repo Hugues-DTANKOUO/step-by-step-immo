@@ -455,12 +455,68 @@ async def dashboard(request: Request):
                 "created_at": "15/03/2025",
                 "completed_steps": 3,
                 "total_steps": 5
+            },
+            {
+                "id": 2,
+                "name": "Achat d'un terrain",
+                "status": "active",
+                "progress": 25,
+                "location": "Douala",
+                "created_at": "15/03/2025",
+                "completed_steps": 1,
+                "total_steps": 4
+            },
+            {
+                "id": 3,
+                "name": "Construction d'une maison à Yaoundé",
+                "status": "pending",
+                "progress": 5,
+                "location": "Montreal",
+                "created_at": "15/03/2025",
+                "completed_steps": 2,
+                "total_steps": 6
             }
         ],
         "completed_steps": 3,
         "services": ["service1", "service2"],
         "days_active": 15
     }
+
+    next_steps = [
+        {
+            "id": 1,
+            "title": "Rencontre avec l'architecte",
+            "project_name": "Projet Exemple",
+            "due_date": "15/04/2025",
+        },
+        {
+            "id": 2,
+            "title": "Visite du terrain",
+            "project_name": "Achat d'un terrain",
+            "due_date": "20/04/2025",
+        }
+    ]
+
+    recommended_services = [
+        {
+            "id": 1,
+            "icon": "fas fa-laptop-code",
+            "name": "Hugues Dtankouo",
+            "category": "Gestionnaire de projet",
+        },
+        {
+            "id": 2,
+            "icon": "fas fa-drafting-compass",
+            "name": "Alban Koffi",
+            "category": "Architecte",
+        },
+        {
+            "id": 3,
+            "icon": "fas fa-home",
+            "name": "Marie Dupont",
+            "category": "Agent immobilier",
+        }
+    ]
     
     return templates.TemplateResponse("main.html", {
         "request": request,
@@ -468,7 +524,9 @@ async def dashboard(request: Request):
         "projects": user_data["projects"],
         "completed_steps": user_data["completed_steps"],
         "services": user_data["services"],
-        "days_active": user_data["days_active"]
+        "days_active": user_data["days_active"],
+        "next_steps": next_steps,
+        "recommended_services": recommended_services,
     })
 
 
